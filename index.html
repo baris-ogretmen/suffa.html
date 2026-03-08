@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="tr" class="theme-oled">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Suffa Külliyatı | Dijital Okuma Platformu</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        themeBg: 'var(--bg-main)',
+                        themeText: 'var(--text-main)',
+                        themeMuted: 'var(--text-muted)',
+                        themePanel: 'var(--panel-bg)',
+                        themeBorder: 'var(--panel-border)',
+                        themePrimary: 'var(--primary)',
+                        themePrimaryGlow: 'var(--primary-glow)',
+                        gold: '#D4AF37',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['"Lora"', 'serif'],
+                        arabic: ['"Amiri"', '"Scheherazade New"', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'slide-in-right': 'slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'audio-wave': 'audioWave 1.2s ease-in-out infinite',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
+                        slideInRight: { '0%': { opacity: '0', transform: 'translateX(30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
+                        audioWave: { '0%, 100%': { height: '4px' }, '50%': { height: '18px' } }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        /* --- TEMA SİSTEMİ --- */
+        :root, .theme-oled {
+            --bg-main: #030303;
+            --text-main: #F9F6EE;
+            --text-muted: #a1a1aa;
+            --panel-bg: rgba(18, 18, 18, 0.75);
+            --panel-border: rgba(255, 255, 255, 0.05);
+            --primary: #022c22;
+            --primary-glow: rgba(2, 44, 34, 0.4);
+            color-scheme: dark;
+        }
+        
+        .theme-sepia {
+            --bg-main: #F4ECD8;
+            --text-main: #433422;
+            --text-muted: #705A3F;
+            --panel-bg: rgba(235, 223, 200, 0.85);
+            --panel-border: rgba(67, 52, 34, 0.1);
+            --primary: #D4AF37; 
+            --primary-glow: rgba(212, 175, 55, 0.15);
+            color-scheme: light;
+        }
+
+        .theme-light {
+            --bg-main: #FAFAFA;
+            --text-main: #111827;
+            --text-muted: #4B5563;
+            --panel-bg: rgba(255, 255, 255, 0.9);
+            --panel-border: rgba(0, 0, 0, 0.08);
+            --primary: #047857; 
+            --primary-glow: rgba(4, 120, 87, 0.1);
+            color-scheme: light;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden; /* containers handle scroll */
+        }
+        
+        .theme-transition {
+            transition: background-color 0.8s ease, border-color 0.8s ease, color 0.8s ease, box-shadow 0.8s ease;
+        }
+
+        .no-transitions * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .glass-panel {
+            background: var(--panel-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--panel-border);
+        }
+
+        .prose-zen p {
+            margin-bottom: 1.75em;
+            line-height: 1.85;
+            letter-spacing: -0.01em;
+            transition: font-size 0.3s ease;
+        }
+
+        .text-arabic {
+            font-family: 'Amiri', 'Scheherazade New', serif;
+            direction: rtl;
+            font-size: 1.4em; 
+            line-height: 2.4;
+            padding: 0.5rem 0;
+        }
+
+        ::selection {
+            background: rgba(212, 175, 55, 0.3);
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useMemo } = React;
+
+        // ==========================================
+        // GLOBAL UI TRANSLATIONS
+        // ==========================================
+        const UI = {
+            tr: {
+                appTitle: "Suffa", appSubtitle: "Dijital Okuma Platformu",
+                menu: "Menü", index: "İçindekiler", compass: "Pusula", myNotes: "Defterim",
+                resume: "Kaldığım Yerden Devam Et", search: "Külliyatta Ara", author: "Yazarımız",
+                dictionary: "Suffa Lügati", settings: "Ayarlar", contact: "Bize Yazın",
+                searchPlaceholder: "Külliyatta ara...", noResult: "Sonuç bulunamadı.",
+                emptyNotes: "Henüz defterinize bir not eklemediniz.\nOkurken metinleri seçerek \"Not Al\"abilirsiniz.",
+                theme: "Tema", fontSize: "Yazı Boyutu", anim: "Sayfa Geçiş Animasyonu", langSelect: "Okuma Dili Seçimi",
+                cancel: "İptal", save: "Kaydet", takeNoteHint: "Bu kısımdan anladığım...", noteTitle: "📝 Suffa Not Defteri",
+                highlight: "Altını Çiz", takeNote: "Not Al", assistant: "Siyer Asistanı", aiTranslate: "AI Çeviri",
+                thinking: "Asistan tefekkür ediyor...", dailyThought: "Günün Tefekkürü", timeline: "Siyer Kronolojisi",
+                actionPlan: "Bu Bölümü Hayatıma Nasıl Taşırım?", actionPlanSub: "(Bilinç Çıkarımı)",
+                actionQuote: "\"Her satır, hayata döküldüğünde bir anlam kazanır...\"",
+                act1: "Hakikati Kuşanmak", act1Desc: "Okunan bölümdeki hakikati, günlük niyetlerimde sorgulamak.",
+                act2: "Temsiliyet", act2Desc: "Sadece anlatan değil, yaşayan bir şahit olmak için gayret etmek.",
+                originalAudio: "Orijinal Ses Kayıtları"
+            },
+            ing: {
+                appTitle: "Suffa", appSubtitle: "Digital Reading Platform",
+                menu: "Menu", index: "Index", compass: "Compass", myNotes: "My Notes",
+                resume: "Resume Reading", search: "Search Collection", author: "Our Author",
+                dictionary: "Suffa Dictionary", settings: "Settings", contact: "Contact Us",
+                searchPlaceholder: "Search...", noResult: "No results found.",
+                emptyNotes: "You haven't added any notes yet.\nSelect text while reading to \"Take Note\".",
+                theme: "Theme", fontSize: "Font Size", anim: "Page Transitions", langSelect: "Reading Language",
+                cancel: "Cancel", save: "Save", takeNoteHint: "My reflections on this...", noteTitle: "📝 Suffa Notebook",
+                highlight: "Highlight", takeNote: "Take Note", assistant: "Siyer Assistant", aiTranslate: "AI Translate",
+                thinking: "Assistant is contemplating...", dailyThought: "Thought of the Day", timeline: "Siyer Timeline",
+                actionPlan: "How do I apply this to my life?", actionPlanSub: "(Conscious Extraction)",
+                actionQuote: "\"Every line gains meaning when poured into life...\"",
+                act1: "Embracing Truth", act1Desc: "Questioning the truth read in my daily intentions.",
+                act2: "Representation", act2Desc: "Striving to be a living witness, not just a narrator.",
+                originalAudio: "Original Recordings"
+            }
+        };
+
+        const QUOTES = [
+            "İhlas, aradan dünyayı çıkarıp sadece O'nu (cc) görmektir...",
+            "Siyer okumak, Asr-ı Saadet'e gitmek değil, Asr-ı Saadet'i kendi asrımıza, kendi evimize ve kendi yüreğimize taşımaktır.",
+            "Sahabe olmak, O'nun (sav) etrafında pervane olup, ateşe atılmaktan korkmamaktır.",
+            "Okçular Tepesi, kıyamete kadar her Müslümanın nöbet tutması gereken manevi bir zirvedir.",
+            "Bedir, sayıların ve imkanların değil, samimiyetin ve Allah'a tam teslimiyetin zaferidir."
+        ];
+
+        const KULLIYAT_VERISI = {
+            sahabe: { 
+                title: "Sahâbe Bilinci", subtitle: "Yıldız Nesil", symbol: '★', 
+                chapters: [
+                    { 
+                        id: 'sh1', title: '1. Bölüm: Gökteki Yıldızlar', 
+                        tr: "Sahâbe bilinci, gökteki yıldızlar gibi yolumuzu aydınlatan asil neslin izinden gitmektir. Siyeri anlamak için önce o kutlu elçinin etrafında pervaneye dönen bu yıldız nesli iyi kavramak gerekir. Onlar, iman davası uğruna mallarını, canlarını ve sevdiklerini feda etmekten bir an bile geri durmadılar.\n\nBugün bizim için en büyük rehberlik, onların o muazzam teslimiyetini ve ihlasını kendi çağımıza taşıyabilmektir. Sahâbe olmak, Asr-ı Saadet'te yaşamak değil, Asr-ı Saadet'in ruhunu kendi evimizde, kendi sokağımızda yaşatabilmektir.", 
+                        ing: "Sahaba consciousness is traversing the precise footsteps of that noble generation, who illuminate our treacherous paths much like the guiding stars in the darkest night...", 
+                        alm: "Das Sahaba-Bewusstsein bedeutet, genau in die Fußstapfen jener edlen Generation zu treten...", 
+                        arp: "إن وعي الصحابة هو اقتفاء أثر ذلك الجيل النبيل الذي يضيء دروبنا المظلمة كنجوم السماء الهادية..." 
+                    }
+                ] 
+            },
+            siyer: {
+                title: "Siyer Bilinci", subtitle: "Hz. Muhammed'in (sav) İzinde", symbol: '☾',
+                chapters: [
+                    {
+                        id: 's1', title: '1. Bölüm: Mekke Dönemi ve Darül Erkam',
+                        tr: "Mekke dönemi, sadece tarihte yaşanmış bir zaman dilimi değil, her Müslümanın kendi iç dünyasında inşa etmesi gereken temel bir 'tevhid' sürecidir. O dar ve çileli sokaklarda kurulan Darül Erkam, bugünün modern dünyasında her eve, her kalbe taşınması gereken nebevi bir mekteptir.",
+                        ing: "The Meccan epoch is not a mere historical parenthesis; it is the fundamental process of 'Tawhid'...",
+                        alm: "Die mekkanische Epoche ist keine bloße historische Klammer...",
+                        arp: "إن العهد المكي ليس مجرد حقبة تاريخية مضت؛ بل هو عملية 'التوحيد' الأساسية التي يجب على كل مؤمن أن يحييها في محراب قلبه."
+                    }
+                ]
+            },
+            kuran: { title: "Kur'ân Bilinci", subtitle: "Hayat Kitabımız", symbol: '✧', chapters: [{ id: 'k1', title: '1. Bölüm: Vahyin Gölgesinde', tr: "Kur'an bilinci...", ing: "Quran consciousness...", alm: "Koranbewusstsein...", arp: "وعي القرآن..." }] },
+            sunnet: { title: "Sünnet Bilinci", subtitle: "Nebevi Rehberlik", symbol: '☀', chapters: [{ id: 'sn1', title: '1. Bölüm: Yaşayan Kur\'an', tr: "Sünnet bilinci...", ing: "Sunnah consciousness...", alm: "Sunnah-Bewusstsein...", arp: "وعي السنة..." }] }
+        };
+
+        const ENCYCLOPEDIA = {
+            'Bedir': { title: 'Bedir Gazvesi', arabic: 'غزوة بدر', desc: 'Hakkı batıldan ayıran "Yevmü\'l-Furkan" (Furkan Günü) olarak anılan ilk büyük savaştır.' },
+            'Uhud': { title: 'Uhud Gazvesi', arabic: 'غزوة أحد', desc: 'İtaatin ve sabrın önemini öğreten eşsiz bir mekteptir.' },
+            'Sahabe': { title: 'Sahâbe-i Kirâm', arabic: 'الصحابة', desc: 'Hz. Peygamber\'i (s.a.v) iman etmiş olarak gören ve bu iman üzere vefat eden nesil.' },
+            'Darül Erkam': { title: 'Dârül Erkam', arabic: 'دار الأرقم', desc: 'Mekke döneminde ilk Müslümanların yetiştiği nebevi mektep.' }
+        };
+
+        const ASSISTANT_DB = {
+            'ihlas': "Kıymetli kardeşlerim, ihlas demek; ameli işlerken sadece ve sadece Allah'ın rızasını gözetmek demektir. Sahabenin o amansız çöllerde destan yazmasının tek sırrı yüreklerindeki bu muazzam ihlastı.",
+            'tevekkül': "Kardeşlerim, tevekkül; deveyi sağlam kazığa bağladıktan sonra Allah'a tam teslim olmaktır.",
+            'mus\'ab': "Kıymetli kardeşlerim, Mus'ab demek, dünyayı elinin tersiyle itip Medine'yi Kur'an'la fethedebilmek demektir.",
+            'uhud': "Uhud... Bize itaatin ve sabrın bedelini öğreten o kutlu dağ. Bugün bizim Okçular Tepemiz neresidir, bunu tefekkür etmeliyiz.",
+            'darül erkam': "Darül Erkam, o daracık sokaklarda kurulan dünyaya meydan okuyan nebevi mekteptir.",
+            'bedir': "Bedir, sayılara takılmadan, mutlak ihlasla Allah'a yöneldiğinde meleklerin yardıma ineceği o muazzam Furkan günüdür.",
+            'sahabe': "Kıymetli kardeşlerim, sahabe demek gökteki yıldızlar demektir. Onlar mallarını, canlarını feda ettiler. Bizim de onlardan alacağımız en büyük ders, bu sarsılmaz teslimiyet olmalıdır."
+        };
+
+        // --- YARDIMCI FONKSİYONLAR ---
+        const normalizeText = (text) => {
+            if (!text) return "";
+            return text.toLocaleLowerCase('tr-TR')
+                       .replace(/[âäàá]/g, 'a')
+                       .replace(/[îïìíı]/g, 'i')
+                       .replace(/[ûüùú]/g, 'u')
+                       .replace(/[öòó]/g, 'o')
+                       .replace(/[ş]/g, 's')
+                       .replace(/[ç]/g, 'c')
+                       .replace(/[ğ]/g, 'g')
+                       .replace(/[.,!?;:'"()\n\r]/g, '')
+                       .trim();
+        };
+
+        const createFuzzyRegexStr = (keyword) => {
+            const norm = normalizeText(keyword);
+            return norm.split('').map(char => {
+                if (char === 'a') return '[aAâÂ]';
+                if (char === 'i') return '[iIıİîÎ]';
+                if (char === 'u') return '[uUûÛüÜ]';
+                if (char === 's') return '[sSşŞ]';
+                if (char === 'c') return '[cCçÇ]';
+                if (char === 'o') return '[oOöÖ]';
+                if (char === 'g') return '[gGğĞ]';
+                return char;
+            }).join('');
+        };
+
+        // --- ICONS ---
+        const IconChevronLeft = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>;
+        const IconGlobe = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>;
+        const IconSparkles = ({ size = 16, className = "" }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>;
+        const IconClose = ({ size = 20 }) => <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>;
+        const IconPalette = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>;
+        const IconMenu = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>;
+        const IconPlay = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>;
+        const IconPause = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>;
+        const IconVolume = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>;
+        const IconNotebook = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M8 7h6"/><path d="M8 11h8"/></svg>;
+        const IconScroll = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="7"/><path d="M12 6v4"/><path d="m9 14 3 3 3-3"/></svg>;
+        const IconSearch = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>;
+        const IconUser = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
+        const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>;
+        const IconCloudDownload = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>;
+        const IconCompass = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>;
+        const IconHourglass = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>;
+        const IconYoutube = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a2.5 2.5 0 0 1 0-5V5a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="m10 8 5 3-5 3V8Z"/></svg>;
+        const IconWeb = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>;
+        const IconWhatsApp = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
+        const IconTelegram = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>;
+        const IconX = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l16 16"/><path d="m4 20 16-16"/></svg>;
+        const IconInstagram = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>;
+
+        // --- MAIN APP COMPONENT ---
+        const App = () => {
+            const [activeScreen, setActiveScreen] = useState('home'); 
+            const [selectedBookKey, setSelectedBookKey] = useState(null);
+            
+            // Reading & Content State
+            const [selectedChapter, setSelectedChapter] = useState(null);
+            const [language, setLanguage] = useState('tr'); 
+            const [activeCard, setActiveCard] = useState(null);
+            const [userHighlights, setUserHighlights] = useState([]); 
+            
+            // UI States
+            const [theme, setTheme] = useState('oled'); 
+            const [fontSize, setFontSize] = useState(18);
+            const [animationsEnabled, setAnimationsEnabled] = useState(true);
+            const [showActionPlan, setShowActionPlan] = useState(false);
+            const [popup, setPopup] = useState(null); 
+            const [dailyQuote, setDailyQuote] = useState("");
+            const [isTransitioning, setIsTransitioning] = useState(false);
+            
+            // Modals & Drawers
+            const [noteModalOpen, setNoteModalOpen] = useState(false);
+            const [noteText, setNoteText] = useState("");
+            const [noteTargetText, setNoteTargetText] = useState("");
+            const [toastMsg, setToastMsg] = useState(null);
+            const [isTimelineOpen, setIsTimelineOpen] = useState(false);
+
+            // Sidebars
+            const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
+            const [sidebarTab, setSidebarTab] = useState(null); 
+            const [searchQuery, setSearchQuery] = useState("");
+            const [isFihristOpen, setIsFihristOpen] = useState(false);
+            const [isNotesDrawerOpen, setIsNotesDrawerOpen] = useState(false);
+
+            // Auto-Scroll State
+            const [isAutoScrolling, setIsAutoScrolling] = useState(false);
+            const readingContainerRef = useRef(null); 
+
+            // LocalStorage & Data
+            const [savedNotes, setSavedNotes] = useState([]);
+            const [lastRead, setLastRead] = useState(null);
+
+            // Audio Player State
+            const [showAudioPlayer, setShowAudioPlayer] = useState(false);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [playbackRate, setPlaybackRate] = useState(1);
+            const synth = window.speechSynthesis;
+            const [voices, setVoices] = useState([]);
+            const chunkIndexRef = useRef(0);
+            const chunksRef = useRef([]);
+
+            const t = UI[language] || UI['tr']; 
+
+            // Mount
+            useEffect(() => {
+                const storedNotes = localStorage.getItem('suffa_notes');
+                if (storedNotes) setSavedNotes(JSON.parse(storedNotes));
+                const storedTheme = localStorage.getItem('suffa_theme');
+                if (storedTheme) setTheme(storedTheme);
+                const storedFontSize = localStorage.getItem('suffa_fontsize');
+                if (storedFontSize) setFontSize(parseInt(storedFontSize));
+                const storedAnim = localStorage.getItem('suffa_anim');
+                if (storedAnim !== null) setAnimationsEnabled(storedAnim === 'true');
+                const storedLastRead = localStorage.getItem('suffa_lastread');
+                if (storedLastRead) setLastRead(JSON.parse(storedLastRead));
+                const storedLang = localStorage.getItem('suffa_lang');
+                if (storedLang) setLanguage(storedLang);
+
+                setDailyQuote(QUOTES[Math.floor(Math.random() * QUOTES.length)]);
+            }, []);
+
+            // Settings Sync
+            useEffect(() => {
+                document.documentElement.className = `theme-${theme} ${!animationsEnabled ? 'no-transitions' : ''}`;
+                localStorage.setItem('suffa_theme', theme);
+                localStorage.setItem('suffa_fontsize', fontSize);
+                localStorage.setItem('suffa_anim', animationsEnabled);
+                localStorage.setItem('suffa_lang', language);
+            }, [theme, animationsEnabled, fontSize, language]);
+
+            useEffect(() => { localStorage.setItem('suffa_notes', JSON.stringify(savedNotes)); }, [savedNotes]);
+
+            useEffect(() => {
+                if (selectedBookKey && selectedChapter) {
+                    const readData = { bookKey: selectedBookKey, chapterId: selectedChapter.id };
+                    setLastRead(readData);
+                    localStorage.setItem('suffa_lastread', JSON.stringify(readData));
+                }
+            }, [selectedBookKey, selectedChapter]);
+
+            useEffect(() => {
+                const loadVoices = () => setVoices(synth.getVoices());
+                loadVoices();
+                if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
+            }, [synth]);
+
+            // --- OTOMATİK KAYDIRMA MOTORU ---
+            useEffect(() => {
+                let interval = null;
+                if (isAutoScrolling && readingContainerRef.current) {
+                    interval = setInterval(() => {
+                        if (readingContainerRef.current) {
+                            readingContainerRef.current.scrollBy({ top: 1, left: 0, behavior: 'auto' });
+                            const { scrollTop, scrollHeight, clientHeight } = readingContainerRef.current;
+                            if (scrollTop + clientHeight >= scrollHeight - 2) {
+                                setIsAutoScrolling(false);
+                            }
+                        }
+                    }, 40); 
+                }
+                return () => clearInterval(interval);
+            }, [isAutoScrolling]);
+
+            // Kaydırma durdurma dinleyicileri
+            useEffect(() => {
+                const container = readingContainerRef.current;
+                const stopScroll = (e) => {
+                    if (e.target.closest('.auto-scroll-btn')) return;
+                    if (isAutoScrolling) setIsAutoScrolling(false);
+                };
+                if (container) {
+                    container.addEventListener('wheel', stopScroll, { passive: true });
+                    container.addEventListener('touchstart', stopScroll, { passive: true });
+                    container.addEventListener('mousedown', stopScroll, { passive: true });
+                }
+                return () => {
+                    if (container) {
+                        container.removeEventListener('wheel', stopScroll);
+                        container.removeEventListener('touchstart', stopScroll);
+                        container.removeEventListener('mousedown', stopScroll);
+                    }
+                };
+            }, [isAutoScrolling, activeScreen]);
+
+            // --- TTS ---
+            const speakNextChunk = () => {
+                if (chunkIndexRef.current >= chunksRef.current.length) { setIsPlaying(false); return; }
+                const text = chunksRef.current[chunkIndexRef.current];
+                const utterance = new SpeechSynthesisUtterance(text);
+                const langMap = { 'tr': 'tr-TR', 'ing': 'en-US', 'alm': 'de-DE', 'arp': 'ar-SA' };
+                utterance.lang = langMap[language];
+                utterance.rate = playbackRate;
+                if (voices.length > 0) {
+                    const langPrefix = langMap[language].split('-')[0];
+                    let voice = voices.find(v => v.lang.replace('_', '-').includes(langPrefix) || v.lang.startsWith(langPrefix));
+                    if (!voice) voice = voices.find(v => v.default) || voices[0];
+                    if (voice) utterance.voice = voice;
+                }
+                utterance.onend = () => { chunkIndexRef.current++; speakNextChunk(); };
+                utterance.onerror = () => { chunkIndexRef.current++; speakNextChunk(); };
+                synth.speak(utterance);
+            };
+
+            const playAudio = () => {
+                if (synth.paused) { synth.resume(); setIsPlaying(true); return; }
+                synth.cancel(); 
+                const textToRead = selectedChapter ? selectedChapter[language] : "";
+                if(!textToRead) return;
+                chunksRef.current = textToRead.split('\n').filter(t => t.trim().length > 0);
+                chunkIndexRef.current = 0;
+                setIsPlaying(true);
+                speakNextChunk();
+            };
+
+            const pauseAudio = () => { synth.pause(); setIsPlaying(false); };
+            const stopAudioCompletely = () => { synth.cancel(); setIsPlaying(false); chunkIndexRef.current = 0; };
+            const togglePlaybackRate = () => {
+                setPlaybackRate(r => r === 1 ? 1.5 : (r === 1.5 ? 2 : 1));
+                if(synth.speaking && isPlaying) { stopAudioCompletely(); setTimeout(() => playAudio(), 100); } 
+            };
+            const handleDownloadMP3 = () => { showToast("☁️ Orijinal MP3 ses dosyası yakında eklenecektir."); };
+
+            // Text Selection Popup
+            useEffect(() => {
+                const handleSelectionEnd = () => {
+                    if(noteModalOpen) return;
+                    setTimeout(() => {
+                        const selection = window.getSelection();
+                        if (selection && selection.toString().trim().length > 0) {
+                            const range = selection.getRangeAt(0);
+                            const rect = range.getBoundingClientRect();
+                            if (rect.width > 0 && rect.top > 0) {
+                                let topPos = rect.top - 65;
+                                let isBelow = false;
+                                if (rect.top < 150) { topPos = rect.bottom + 15; isBelow = true; }
+                                setPopup({ text: selection.toString().trim(), top: Math.max(10, topPos), left: rect.left + (rect.width / 2), state: 'menu', isBelow: isBelow });
+                            }
+                        } else { setPopup(null); }
+                    }, 150);
+                };
+                document.addEventListener('mouseup', handleSelectionEnd);
+                document.addEventListener('touchend', handleSelectionEnd);
+                return () => {
+                    document.removeEventListener('mouseup', handleSelectionEnd);
+                    document.removeEventListener('touchend', handleSelectionEnd);
+                };
+            }, [popup, noteModalOpen]);
+
+            const showToast = (msg) => { setToastMsg(msg); setTimeout(() => setToastMsg(null), 3500); }
+
+            const handleBookClick = (bookKey, chapterId = null) => {
+                const book = KULLIYAT_VERISI[bookKey];
+                if (!book) return;
+                const chapter = chapterId ? book.chapters.find(c => c.id === chapterId) : book.chapters[0];
+                setSelectedBookKey(bookKey);
+                setSelectedChapter(chapter || book.chapters[0]);
+                setActiveScreen('reading');
+                setIsMegaMenuOpen(false);
+                setIsFihristOpen(false);
+                setIsNotesDrawerOpen(false);
+            };
+
+            const handleChapterSelect = (chapter) => {
+                if (animationsEnabled && chapter.id !== selectedChapter?.id) {
+                    setIsTransitioning(true);
+                    setTimeout(() => {
+                        setSelectedChapter(chapter);
+                        setTimeout(() => setIsTransitioning(false), 50);
+                    }, 300);
+                } else {
+                    setSelectedChapter(chapter);
+                }
+                setIsFihristOpen(false);
+            }
+
+            const goHome = () => {
+                setActiveScreen('home');
+                setPopup(null);
+                stopAudioCompletely();
+                setIsMegaMenuOpen(false);
+                setIsFihristOpen(false);
+                setIsNotesDrawerOpen(false);
+                setTimeout(() => { setSelectedBookKey(null); setSelectedChapter(null); }, 400);
+            };
+
+            // --- SİYER ASİSTANI NOKTA ATIŞI ANALİZ ---
+            const handleSiyerAssistant = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                const selectionNormalized = normalizeText(popup.text);
+                setPopup(prev => ({ ...prev, state: 'assistant_loading' }));
+                
+                setTimeout(() => {
+                    let foundMatch = null;
+                    for (const [key, response] of Object.entries(ASSISTANT_DB)) {
+                        const keyNormalized = normalizeText(key);
+                        if (selectionNormalized.includes(keyNormalized) || keyNormalized.includes(selectionNormalized)) {
+                            foundMatch = response;
+                            break;
+                        }
+                    }
+                    if (!foundMatch) foundMatch = "Kardeşlerim, bu satırlarda Asr-ı Saadet'in o sarsılmaz imanı ve teslimiyeti var. Seçtiğiniz bu kavram üzerine tefekkür etmek, nebevi çizgide bir şuur inşası için muazzam bir adımdır.";
+                    setPopup(prev => ({ ...prev, state: 'assistant_result', assistantText: foundMatch }));
+                }, 800);
+            };
+
+            const handleHighlight = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                if(popup && popup.text) {
+                    setUserHighlights(prev => [...prev, popup.text]);
+                    showToast(t.highlight + " 🖍️");
+                    setPopup(null);
+                    window.getSelection().removeAllRanges();
+                }
+            };
+
+            const openNoteModal = (e) => {
+                if(e) { e.preventDefault(); e.stopPropagation(); }
+                setNoteTargetText(popup.text);
+                setNoteText(t.takeNoteHint);
+                setNoteModalOpen(true);
+                setPopup(null);
+            };
+
+            const saveNote = () => {
+                const newNote = {
+                    id: Date.now(), quote: noteTargetText, text: noteText,
+                    book: activeBook?.title || "Kitap", chapter: selectedChapter?.title || "Bölüm",
+                    date: new Date().toLocaleDateString('tr-TR')
+                };
+                setSavedNotes(prev => [newNote, ...prev]);
+                setNoteModalOpen(false);
+                showToast(t.save + " 📝");
+                window.getSelection().removeAllRanges();
+            };
+
+            const renderTextWithHighlights = (text, currentLang) => {
+                if (!text) return null;
+                const pClass = currentLang === 'arp' ? "text-arabic" : "";
+                const keywords = Object.keys(ENCYCLOPEDIA);
+                const allTerms = [...keywords, ...userHighlights].filter(Boolean);
+                if (allTerms.length === 0 || currentLang !== 'tr') return text.split('\n\n').map((p, i) => <p key={i} className={pClass}>{p}</p>);
+                const allTermsRegexStr = allTerms.map(t => createFuzzyRegexStr(t)).join('|');
+                const regex = new RegExp(`(${allTermsRegexStr})`, 'gi');
+                return text.split('\n\n').map((paragraph, pIndex) => {
+                    const parts = paragraph.split(regex);
+                    return (
+                        <p key={pIndex} className={pClass}>
+                            {parts.map((part, i) => {
+                                const normPart = normalizeText(part);
+                                const encKeyword = keywords.find(k => normalizeText(k) === normPart);
+                                if (encKeyword) return <span key={i} onClick={() => setActiveCard(ENCYCLOPEDIA[encKeyword])} className="text-[#D4AF37] font-bold border-b border-[#D4AF37]/50 cursor-pointer transition-colors duration-300 hover:bg-[#D4AF37]/10 px-1 rounded-sm">{part}</span>;
+                                const userHighlight = userHighlights.find(k => normalizeText(k) === normPart);
+                                if (userHighlight) return <span key={i} className="bg-gold/20 text-[#D4AF37] font-bold border-b border-[#D4AF37]/50 px-1 rounded-sm transition-colors theme-transition">{part}</span>;
+                                return part;
+                            })}
+                        </p>
+                    );
+                });
+            };
+
+            const activeBook = selectedBookKey ? KULLIYAT_VERISI[selectedBookKey] : null;
+            const content = selectedChapter ? selectedChapter[language] : '';
+
+            const renderAccordionContent = (tabId) => {
+                switch(tabId) {
+                    case 'author':
+                        return (
+                            <div className="flex flex-col items-center text-center space-y-4">
+                                <img src="m.e.yıldırım.jpg" alt="M. Emin Yıldırım" className="w-24 h-24 rounded-full mx-auto border-2 border-gold shadow-lg object-cover" />
+                                <h3 className="text-xl font-serif text-themeText">Muhammed Emin Yıldırım</h3>
+                                <p className="text-sm text-themeMuted leading-relaxed">
+                                    1973 Erzurum doğumlu olan yazar, 2010 yılında Siyer Vakfı'nı kurmuştur. 
+                                    'Bilgiden Bilince' şiarıyla Siyer ilmini çağımıza taşıyan öncü çalışmalara imza atmaktadır.
+                                </p>
+                            </div>
+                        );
+                    case 'settings':
+                        return (
+                            <div className="space-y-6">
+                                <div>
+                                    <label className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-3 block">{t.langSelect}</label>
+                                    <div className="flex space-x-2">
+                                        {[ {code: 'tr', label: 'TR'}, {code: 'ing', label: 'EN'} ].map(lang => (
+                                            <button key={lang.code} onClick={() => setLanguage(lang.code)} className={`flex-1 py-2 rounded-lg text-sm font-semibold transition-colors border ${language === lang.code ? 'border-gold text-themeBg bg-gold shadow-md' : 'border-themeBorder text-themeMuted hover:border-themeText hover:bg-themeBorder/30'}`}>{lang.label}</button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className="w-full h-px bg-themeBorder/50"></div>
+                                <a href="https://suffameclisleri.com" target="_blank" className="w-full py-3 rounded-xl bg-gold/10 border border-gold/30 text-gold text-sm font-semibold hover:bg-gold/20 transition-colors flex items-center justify-center space-x-2 shadow-sm">
+                                    <IconVolume /> <span>Orijinal Ses Kayıtları</span>
+                                </a>
+                                <div>
+                                    <label className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-3 block">{t.theme}</label>
+                                    <div className="flex space-x-2">
+                                        {['oled', 'sepia', 'light'].map(thm => (
+                                            <button key={thm} onClick={() => setTheme(thm)} className={`flex-1 py-2 rounded-lg text-sm capitalize border ${theme === thm ? 'border-gold text-gold bg-gold/10' : 'border-themeBorder text-themeMuted hover:border-themeText'}`}>{thm}</button>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-3 block flex items-center justify-between">
+                                        <span>{t.anim}</span>
+                                        <button onClick={() => setAnimationsEnabled(!animationsEnabled)} className={`w-10 h-5 rounded-full relative transition-colors ${animationsEnabled ? 'bg-gold' : 'bg-themeBorder'}`}>
+                                            <div className={`w-3 h-3 bg-white rounded-full absolute top-1 transition-transform ${animationsEnabled ? 'left-6' : 'left-1'}`}></div>
+                                        </button>
+                                    </label>
+                                </div>
+                            </div>
+                        );
+                    case 'search': return <div className="p-2 text-sm text-themeMuted italic">Arama modülü hazır...</div>;
+                    case 'dictionary': return <div className="p-2 text-sm text-themeMuted italic">Lügat hazır...</div>;
+                    case 'notes': return <div className="p-2 text-sm text-themeMuted italic">Notlarınız hazır...</div>;
+                }
+            };
+
+            return (
+                <div className="min-h-screen relative overflow-hidden font-sans theme-transition flex flex-col">
+                    <div className="fixed top-[-20%] left-[-10%] w-[50%] h-[50%] blur-[120px] rounded-full pointer-events-none z-0 theme-transition" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
+                    <div className="fixed bottom-[-20%] right-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none z-0 theme-transition" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
+
+                    {/* --- MEGA MENU --- */}
+                    <div className={`fixed inset-0 z-[70] transition-all duration-500 ${isMegaMenuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+                        <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsMegaMenuOpen(false)}></div>
+                        <div className={`absolute top-0 left-0 bottom-0 w-full sm:w-[400px] glass-panel border-r border-themeBorder shadow-2xl flex flex-col transition-transform duration-500 ${isMegaMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                            <div className="p-6 border-b border-themeBorder flex justify-between items-center bg-themePanel/50">
+                                <h2 className="text-xl font-light tracking-tight text-themeText">{t.appTitle} <span className="font-semibold text-gold">{t.menu}</span></h2>
+                                <button onClick={() => setIsMegaMenuOpen(false)} className="text-themeMuted hover:text-themeText p-1 bg-themeBorder/50 rounded-full"><IconClose /></button>
+                            </div>
+                            <div className="flex-1 overflow-y-auto custom-scrollbar p-4 space-y-3">
+                                {[
+                                    {id: 'search', icon: <IconSearch size={18}/>, label: t.search},
+                                    {id: 'author', icon: <IconUser size={18}/>, label: t.author},
+                                    {id: 'dictionary', icon: <IconGlobe size={18}/>, label: t.dictionary},
+                                    {id: 'notes', icon: <IconNotebook size={18}/>, label: t.myNotes},
+                                    {id: 'settings', icon: <IconSettings size={18}/>, label: t.settings}
+                                ].map(item => (
+                                    <div key={item.id} className="bg-themeBorder/10 rounded-xl border border-themeBorder overflow-hidden">
+                                        <button onClick={() => setSidebarTab(sidebarTab === item.id ? null : item.id)} className={`w-full flex items-center justify-between p-4 transition-colors ${sidebarTab === item.id ? 'bg-themeBorder/30 text-gold' : 'hover:bg-themeBorder/20 text-themeText'}`}>
+                                            <div className="flex items-center space-x-3">{item.icon}<span className="font-serif tracking-wide">{item.label}</span></div>
+                                            <svg className={`w-5 h-5 transform transition-transform duration-300 ${sidebarTab === item.id ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                                        </button>
+                                        <div className={`transition-all duration-500 ease-in-out ${sidebarTab === item.id ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}><div className="p-4 border-t border-themeBorder/30 bg-themeBg/30">{renderAccordionContent(item.id)}</div></div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="p-6 border-t border-themeBorder bg-themePanel/30 flex flex-col items-center space-y-4">
+                                <div className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-1">{t.contact}</div>
+                                <div className="flex justify-center space-x-5 text-themeMuted">
+                                    <a href="https://www.youtube.com/@siyertv" target="_blank" className="hover:text-red-500 transition-colors transform hover:scale-110"><IconYoutube /></a>
+                                    <a href="https://wa.me/902125679041" target="_blank" className="hover:text-[#25D366] transition-colors transform hover:scale-110"><IconWhatsApp /></a>
+                                    <a href="https://t.me/siyervakfi" target="_blank" className="hover:text-[#0088cc] transition-colors transform hover:scale-110"><IconTelegram /></a>
+                                    <a href="https://instagram.com/m_eminyildirim" target="_blank" className="hover:text-[#E1306C] transition-colors transform hover:scale-110"><IconInstagram /></a>
+                                    <a href="https://twitter.com/m_eminyildirim" target="_blank" className="hover:text-white transition-colors transform hover:scale-110"><IconX /></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* --- HOME SCREEN --- */}
+                    <div className={`absolute inset-0 z-10 transition-all duration-700 ease-in-out ${activeScreen === 'home' ? 'opacity-100 visible translate-x-0' : `opacity-0 invisible ${animationsEnabled ? '-translate-x-full' : 'translate-x-0'}`}`}>
+                        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-12 flex flex-col min-h-screen overflow-y-auto custom-scrollbar no-scrollbar">
+                            <header className="flex justify-between items-center mb-8 animate-fade-in">
+                                <div className="flex items-center space-x-4">
+                                    <button onClick={() => setIsMegaMenuOpen(true)} className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-themeText hover:text-gold transition-colors"><IconMenu /></button>
+                                    <div><h1 className="text-2xl sm:text-3xl font-light tracking-tight text-themeText">{t.appTitle} <span className="font-semibold text-themePrimary">Külliyatı</span></h1><p className="text-xs sm:text-sm text-themeMuted mt-1 opacity-60 uppercase">{t.appSubtitle}</p></div>
+                                </div>
+                            </header>
+                            <div className="mb-8 p-5 glass-panel rounded-2xl border border-gold/30 relative overflow-hidden animate-slide-up shadow-lg">
+                                <div className="absolute top-0 left-0 w-1.5 h-full bg-gold"></div>
+                                <div className="flex items-start space-x-4">
+                                    <div className="text-gold mt-1"><IconSparkles size={20}/></div>
+                                    <div><h3 className="text-[10px] uppercase tracking-[0.2em] text-gold mb-2 font-bold">{t.dailyThought}</h3><p className="text-themeText font-serif italic text-sm sm:text-lg leading-relaxed">"{dailyQuote}"</p></div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 flex-grow content-center animate-slide-up" style={{animationDelay: '0.2s'}}>
+                                {Object.entries(KULLIYAT_VERISI).map(([key, book]) => (
+                                    <div key={key} onClick={() => handleBookClick(key)} className="group cursor-pointer relative">
+                                        <div className="aspect-[2/3] w-full rounded-sm glass-panel flex flex-col items-center justify-center transition-all duration-500 transform group-hover:-translate-y-3 group-hover:shadow-2xl overflow-hidden relative" style={{ boxShadow: '0 20px 40px -10px var(--primary-glow)' }}>
+                                            <div className="absolute top-0 bottom-0 left-4 sm:left-6 w-px bg-themeBorder"></div>
+                                            <span className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-500" style={{ color: 'var(--primary)' }}>{book.symbol}</span>
+                                            <div className="text-center relative z-10 px-4"><h2 className="text-xl sm:text-2xl font-serif font-medium tracking-wide text-themeText mb-1">{book.title}</h2><p className="text-[10px] uppercase tracking-[0.3em] text-themeMuted/60">{book.subtitle}</p></div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* --- READING SCREEN --- */}
+                    <div ref={readingContainerRef} className={`absolute inset-0 z-20 overflow-y-auto transition-all duration-700 ease-in-out ${activeScreen === 'reading' ? 'opacity-100 visible translate-x-0' : `opacity-0 invisible ${animationsEnabled ? 'translate-x-full' : 'translate-x-0'} pointer-events-none`}`}>
+                        
+                        <div className={`fixed inset-0 z-[60] transition-all duration-500 ${isNotesDrawerOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsNotesDrawerOpen(false)}></div>
+                            <div className={`absolute top-0 right-0 bottom-0 w-full sm:w-96 glass-panel border-l border-themeBorder shadow-2xl p-6 transition-transform duration-500 flex flex-col ${isNotesDrawerOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+                                <div className="flex justify-between items-center mb-6 pb-4 border-b border-themeBorder"><h3 className="font-serif text-lg text-gold flex items-center gap-2"><IconNotebook /> {t.myNotes}</h3><button onClick={() => setIsNotesDrawerOpen(false)} className="text-themeMuted"><IconClose /></button></div>
+                                <div className="flex-1 overflow-y-auto pr-2 space-y-4 custom-scrollbar">
+                                    {savedNotes.length === 0 ? <div className="text-center text-themeMuted text-sm mt-10 italic">{t.emptyNotes}</div> : savedNotes.map(note => <div key={note.id} className="bg-themeBorder/30 rounded-xl p-4 border border-themeBorder shadow-sm"><div className="text-[10px] uppercase text-themeMuted mb-2 flex justify-between"><span>{note.book} • {note.chapter}</span><span>{note.date}</span></div><div className="mb-3 pl-3 border-l-2 border-gold/30 text-sm italic text-themeMuted opacity-80">"{note.quote}"</div><div className="text-sm text-themeText whitespace-pre-wrap">{note.text}</div></div>)}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className={`fixed inset-0 z-[60] transition-all duration-500 ${isFihristOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+                            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsFihristOpen(false)}></div>
+                            <div className={`absolute top-0 left-0 bottom-0 w-full sm:w-80 glass-panel border-r border-themeBorder shadow-2xl p-6 transition-transform duration-500 flex flex-col ${isFihristOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                                <div className="flex justify-between items-center mb-8 pb-4 border-b border-themeBorder"><h3 className="font-serif text-lg text-themeText">{t.index}</h3><button onClick={() => setIsFihristOpen(false)} className="text-themeMuted"><IconClose /></button></div>
+                                <div className="flex-1 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+                                    {activeBook?.chapters.map((ch) => (
+                                        <button key={ch.id} onClick={() => handleChapterSelect(ch)} className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-300 text-sm font-medium ${selectedChapter?.id === ch.id ? 'bg-gold/10 text-gold border border-gold/20' : 'text-themeMuted hover:text-themeText hover:bg-themeBorder'}`}>{ch.title}</button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        {popup && (
+                            <div className={`fixed z-50 -translate-x-1/2 mb-3 glass-panel rounded-xl shadow-2xl p-1.5 flex items-center space-x-1 ${popup.isBelow ? 'mt-3' : ''}`} style={{ top: popup.top, left: popup.left }} onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                                {popup.state === 'menu' && (
+                                    <>
+                                        <button onClick={(e) => handleHighlight(e)} onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); }} className="px-3 py-1.5 text-sm flex items-center space-x-1.5 text-themeText hover:bg-themeBorder rounded-lg transition font-medium"><span>🖍️ <span className="hidden sm:inline">{t.highlight}</span></span></button>
+                                        <div className="w-px h-5 bg-themeBorder"></div>
+                                        <button onClick={(e) => openNoteModal(e)} onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); }} className="px-3 py-1.5 text-sm flex items-center space-x-1.5 text-themeText hover:bg-themeBorder rounded-lg transition font-medium"><span>📝 <span className="hidden sm:inline">{t.takeNote}</span></span></button>
+                                        <div className="w-px h-5 bg-themeBorder"></div>
+                                        <button onClick={(e) => handleSiyerAssistant(e)} onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); }} className="px-3 py-1.5 text-sm flex items-center space-x-1.5 text-themeText hover:bg-themeBorder rounded-lg transition font-medium"><span>✨ <span className="hidden sm:inline">{t.assistant}</span></span></button>
+                                    </>
+                                )}
+                                {popup.state === 'assistant_loading' && <div className="px-5 py-4 text-sm text-themeMuted flex flex-col items-center space-y-3 min-w-[220px]"><div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin"></div><span className="animate-pulse">{t.thinking}</span></div>}
+                                {popup.state === 'assistant_result' && <div className="px-5 py-4 text-sm text-themeText w-72 sm:w-80 relative font-serif leading-relaxed shadow-lg"><button onClick={() => setPopup(null)} className="absolute top-1 right-1 text-themeMuted hover:text-themeText p-1"><IconClose size={14}/></button><span className="text-gold text-[10px] uppercase tracking-widest mb-3 block font-sans font-bold flex items-center gap-1.5 border-b border-gold/20 pb-2">✨ {t.assistant}</span><div className="italic text-themeText/90 max-h-[40vh] overflow-y-auto custom-scrollbar pr-2">"{popup.assistantText}"</div></div>}
+                                <div className={`absolute left-1/2 -translate-x-1/2 border-[6px] border-transparent ${popup.isBelow ? 'bottom-full border-b-[var(--panel-border)]' : 'top-full border-t-[var(--panel-border)]'}`}></div>
+                            </div>
+                        )}
+
+                        <div className="sticky top-0 z-40 glass-panel px-3 sm:px-6 py-3 sm:py-4 flex justify-between items-center transition-transform shadow-sm">
+                            <div className="flex items-center space-x-1 sm:space-x-4">
+                                <button onClick={goHome} className="p-2 text-themeMuted hover:text-themeText rounded-full transition-colors"><IconChevronLeft /></button>
+                                <button onClick={() => setIsFihristOpen(true)} className="flex items-center space-x-2 text-sm font-medium tracking-wide text-themeMuted hover:text-themeText px-2 py-2 rounded-lg hover:bg-themeBorder transition-colors"><IconMenu /> <span className="hidden sm:block">{t.index}</span></button>
+                            </div>
+                            <div className="absolute left-1/2 transform -translate-x-1/2 text-center opacity-0 lg:opacity-100 pointer-events-none"><span className="text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: 'var(--primary)' }}>{activeBook?.title}</span></div>
+                            <div className="flex items-center space-x-1 sm:space-x-2">
+                                <button onClick={() => setIsNotesDrawerOpen(true)} className="flex items-center space-x-2 p-2 text-themeMuted hover:text-gold rounded-full transition-colors"><IconNotebook /></button>
+                                <button onClick={() => setIsAutoScrolling(!isAutoScrolling)} className={`auto-scroll-btn p-2 rounded-full transition-colors flex items-center space-x-1 ${isAutoScrolling ? 'text-gold bg-gold/10 animate-pulse' : 'text-themeMuted hover:text-themeText hover:bg-themeBorder'}`}><IconScroll /></button>
+                                <button onClick={() => { setShowAudioPlayer(true); if(!isPlaying) playAudio(); }} className={`p-2 rounded-full transition-colors flex items-center space-x-1 ${showAudioPlayer ? 'text-gold bg-gold/10' : 'text-themeMuted hover:text-themeText hover:bg-themeBorder'}`}><IconVolume /></button>
+                            </div>
+                        </div>
+
+                        <div className="w-full max-w-2xl lg:max-w-3xl mx-auto px-5 sm:px-8 pt-12 pb-64">
+                            <div className={`transition-all ${animationsEnabled ? 'duration-500 ease-out' : 'duration-0'} ${isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'}`}>
+                                <div className="text-center mb-12"><h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-medium text-themeText mb-4">{selectedChapter?.title}</h1><div className="w-16 h-px mx-auto" style={{ backgroundColor: 'var(--primary)', opacity: 0.5 }}></div></div>
+                                <article className="prose-zen font-serif text-themeText/90" style={{ fontSize: `${fontSize}px` }}>{renderTextWithHighlights(content, language)}</article>
+                            </div>
+                        </div>
+
+                        {activeCard && (
+                            <div className="fixed bottom-24 left-0 right-0 z-40 flex justify-center p-4 md:p-6 pointer-events-none">
+                                <div className="w-full max-w-lg glass-panel rounded-2xl shadow-2xl p-6 pointer-events-auto transition-all duration-500 animate-slide-up relative">
+                                    <button onClick={() => setActiveCard(null)} className="absolute -top-2 -right-2 p-2 text-themeMuted hover:text-themeText transition-colors rounded-full hover:bg-themeBorder"><IconClose /></button>
+                                    <div className="flex items-center space-x-3 mb-3"><div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: 'var(--primary-glow)', color: 'var(--primary)' }}><IconGlobe /></div><div><h3 className="text-lg font-serif font-medium text-gold">{activeCard.title}</h3><span className="text-xs text-themeMuted/60 font-serif">{activeCard.arabic}</span></div></div>
+                                    <p className="text-sm text-themeText/80 leading-relaxed font-sans">{activeCard.desc}</p>
+                                </div>
+                            </div>
+                        )}
+
+                        <div className={`fixed bottom-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-700 ${showAudioPlayer && activeScreen === 'reading' ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'}`}>
+                            <div className="glass-panel px-4 py-2 rounded-full shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex items-center space-x-3 border border-themeBorder relative">
+                                <button onClick={() => { setShowAudioPlayer(false); stopAudioCompletely(); }} className="absolute -top-2 -right-2 w-6 h-6 bg-themeBorder rounded-full flex items-center justify-center text-themeMuted hover:bg-red-500/50 transition-colors"><IconClose size={12} /></button>
+                                <button onClick={() => isPlaying ? pauseAudio() : playAudio()} className="w-10 h-10 rounded-full flex items-center justify-center text-themeBg bg-themeText hover:scale-105 transition-transform">{isPlaying ? <IconPause /> : <IconPlay />}</button>
+                                <div className="flex items-center space-x-1 h-6 px-1">{[1, 2, 3, 4, 5].map(i => <div key={i} className={`w-1 rounded-full bg-gold transition-all duration-300 ${isPlaying ? 'animate-audio-wave' : 'h-1'}`} style={{ animationDelay: `${i * 0.15}s`, opacity: isPlaying ? 0.8 : 0.3 }}></div>)}</div>
+                                <button onClick={togglePlaybackRate} className="text-xs font-bold text-themeMuted hover:text-themeText transition-colors w-6 text-center">{playbackRate}x</button>
+                                <div className="w-px h-6 bg-themeBorder"></div>
+                                <button onClick={handleDownloadMP3} className="w-8 h-8 rounded-full bg-gold/10 text-gold flex items-center justify-center hover:bg-gold transition-colors"><IconCloudDownload /></button>
+                            </div>
+                        </div>
+
+                        {noteModalOpen && (
+                            <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+                                <div className="absolute inset-0 bg-black/60 backdrop-blur-md" onClick={() => setNoteModalOpen(false)}></div>
+                                <div className="relative w-full max-w-lg glass-panel rounded-2xl shadow-2xl overflow-hidden animate-slide-up border border-gold/20">
+                                    <div className="p-4 border-b border-themeBorder flex justify-between items-center bg-gold/5"><h3 className="font-serif text-base text-gold flex items-center gap-2">{t.noteTitle}</h3><button onClick={() => setNoteModalOpen(false)} className="text-themeMuted"><IconClose /></button></div>
+                                    <div className="p-5">{noteTargetText && <div className="mb-4 pl-3 border-l-2 border-gold/30 text-sm italic text-themeMuted opacity-50 line-clamp-3">"{noteTargetText}"</div>}<textarea value={noteText} onChange={(e) => setNoteText(e.target.value)} className="w-full h-40 bg-transparent text-themeText/90 font-serif text-base resize-none focus:outline-none placeholder-themeMuted/50 leading-relaxed custom-scrollbar" autoFocus></textarea></div>
+                                    <div className="p-4 border-t border-themeBorder bg-themePanel/50 flex justify-end space-x-3"><button onClick={() => setNoteModalOpen(false)} className="px-4 py-2 rounded-xl text-themeMuted text-sm font-medium">{t.cancel}</button><button onClick={saveNote} className="px-5 py-2 rounded-xl bg-gold text-themeBg hover:bg-yellow-500 transition-colors text-sm font-bold shadow-lg shadow-gold/20">{t.save}</button></div>
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
