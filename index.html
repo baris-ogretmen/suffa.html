@@ -38,13 +38,14 @@
                         'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'slide-in-right': 'slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'audio-wave': 'audioWave 1.2s ease-in-out infinite',
-                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'pulse-slow': 'pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
                         slideUp: { '0%': { opacity: '0', transform: 'translateY(20px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         slideInRight: { '0%': { opacity: '0', transform: 'translateX(30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-                        audioWave: { '0%, 100%': { height: '4px' }, '50%': { height: '18px' } }
+                        audioWave: { '0%, 100%': { height: '4px' }, '50%': { height: '18px' } },
+                        pulse: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '.6' } }
                     }
                 }
             }
@@ -96,6 +97,7 @@
         /* YAZI TİPİ GEÇİŞ DESTEĞİ */
         .font-style-serif .prose-zen p { font-family: 'Lora', serif; }
         .font-style-sans .prose-zen p { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-arabic { font-family: 'Amiri', 'Scheherazade New', serif !important; }
 
         body {
             background-color: var(--bg-main);
@@ -413,14 +415,14 @@
             
             // Reading & Content State
             const [selectedChapter, setSelectedChapter] = useState(null);
-            const [isFocusMode, setIsFocusMode] = useState(false); // YENİ: Odak Modu
+            const [isFocusMode, setIsFocusMode] = useState(false); 
             
-            // KESİN DİL BAŞLANGICI: Daima ve zorunlu 'tr' ile başlar. Başka dilde kalmış olsa bile ezer.
+            // KESİN DİL BAŞLANGICI: Daima ve zorunlu 'tr' ile başlar.
             const [language, setLanguage] = useState('tr');
 
             const [activeCard, setActiveCard] = useState(null); 
             
-            // FOSFORLU KALEM KAYITLARI: Kalıcı olarak hafızaya yazılır.
+            // FOSFORLU KALEM KAYITLARI
             const [userHighlights, setUserHighlights] = useState(() => {
                 if (typeof window !== 'undefined') {
                     return JSON.parse(localStorage.getItem('suffa_highlights') || '[]');
@@ -442,7 +444,7 @@
             const [noteText, setNoteText] = useState("");
             const [noteTargetText, setNoteTargetText] = useState("");
             const [editingNoteId, setEditingNoteId] = useState(null);
-            const [activeNoteColor, setActiveNoteColor] = useState('default'); // Not rengi state'i
+            const [activeNoteColor, setActiveNoteColor] = useState('default'); 
             const [toastMsg, setToastMsg] = useState(null);
             const [isTimelineOpen, setIsTimelineOpen] = useState(false);
 
@@ -455,6 +457,7 @@
             // Auto-Scroll State
             const [isAutoScrolling, setIsAutoScrolling] = useState(false);
             const readingContainerRef = useRef(null); 
+            const scrollAccumulatorRef = useRef(0); // Pürüzsüz kaydırma için virgüllü sayı tutucu
             
             // Progress Bar State
             const [scrollProgress, setScrollProgress] = useState(0);
@@ -476,8 +479,7 @@
 
             // Mount & Initial Force Language
             useEffect(() => {
-                // Zorunlu dil ayarı her girişte tr'ye zorlar
-                localStorage.setItem('suffa_lang', 'tr');
+                localStorage.setItem('suffa_lang', 'tr'); // Her girişte ez!
 
                 const storedNotes = localStorage.getItem('suffa_notes');
                 if (storedNotes) setSavedNotes(JSON.parse(storedNotes));
@@ -536,31 +538,49 @@
                 }
             };
 
-            // --- KESİNTİSİZ OTOMATİK KAYDIRMA MOTORU (DOĞRUDAN DOM MÜDAHALESİ İLE STABİLİZE EDİLDİ) ---
+            // --- GELİŞMİŞ & PÜRÜZSÜZ OTOMATİK KAYDIRMA (requestAnimationFrame ile kesin çözüm) ---
             useEffect(() => {
-                let interval = null;
-                if (isAutoScrolling && readingContainerRef.current) {
-                    interval = setInterval(() => {
-                        const container = readingContainerRef.current;
-                        if (container) {
-                            // DOM scrollTop müdahalesi requestAnimationFrame'den ve react state lag'inden daha stabildir.
-                            container.scrollTop += 1; 
+                let animationFrameId;
+                let lastTime = performance.now();
+                const scrollSpeed = 0.035; // 1 saniyede yaklaşık 35 piksel akar
+
+                const scroll = (currentTime) => {
+                    if (isAutoScrolling && readingContainerRef.current) {
+                        const deltaTime = currentTime - lastTime;
+                        lastTime = currentTime;
+                        
+                        scrollAccumulatorRef.current += scrollSpeed * deltaTime;
+                        
+                        // Tam piksele ulaştığında kaydır (fractional scroll sorunu engeller)
+                        if (scrollAccumulatorRef.current >= 1) {
+                            const scrollAmount = Math.floor(scrollAccumulatorRef.current);
+                            readingContainerRef.current.scrollBy(0, scrollAmount);
+                            scrollAccumulatorRef.current -= scrollAmount;
                             
-                            const { scrollTop, scrollHeight, clientHeight } = container;
-                            if (scrollTop + clientHeight >= scrollHeight - 2) {
+                            const { scrollTop, scrollHeight, clientHeight } = readingContainerRef.current;
+                            if (Math.ceil(scrollTop + clientHeight) >= scrollHeight - 2) {
                                 setIsAutoScrolling(false);
+                                return;
                             }
                         }
-                    }, 30); // 30ms'de 1px kaydırma akıcı bir okuma hızıdır
+                        animationFrameId = requestAnimationFrame(scroll);
+                    }
+                };
+
+                if (isAutoScrolling) {
+                    lastTime = performance.now();
+                    scrollAccumulatorRef.current = 0;
+                    animationFrameId = requestAnimationFrame(scroll);
                 }
-                return () => clearInterval(interval);
+
+                return () => cancelAnimationFrame(animationFrameId);
             }, [isAutoScrolling]);
 
             // Kaydırma müdahalesi ile otomatik kaydırmayı durdurma
             useEffect(() => {
                 const container = readingContainerRef.current;
                 const stopScroll = (e) => {
-                    if (e.target.closest('.auto-scroll-btn')) return; // Kendi butonuna basarken durmasın
+                    if (e.target.closest('.auto-scroll-btn')) return; 
                     if (isAutoScrolling) setIsAutoScrolling(false);
                 };
                 if (container && activeScreen === 'reading') {
@@ -577,7 +597,7 @@
                 };
             }, [isAutoScrolling, activeScreen]);
 
-            // --- MULTI-LANGUAGE TTS MOTORU (Düzeltilmiş) ---
+            // --- MULTI-LANGUAGE TTS MOTORU ---
             const speakNextChunk = () => {
                 if (chunkIndexRef.current >= chunksRef.current.length) { setIsPlaying(false); return; }
                 const text = chunksRef.current[chunkIndexRef.current];
@@ -585,17 +605,15 @@
                 
                 const langMap = { 'tr': 'tr-TR', 'ing': 'en-US', 'alm': 'de-DE', 'arp': 'ar-SA' };
                 const targetLang = langMap[language] || 'tr-TR';
-                const langPrefix = targetLang.split('-')[0]; // tr, en, de, ar
+                const langPrefix = targetLang.split('-')[0]; 
                 
                 utterance.lang = targetLang;
                 utterance.rate = playbackRate;
                 
                 if (voices.length > 0) {
-                    // İşletim sistemindeki en uygun sesi bulma algoritması
-                    let voice = voices.find(v => v.lang === targetLang && v.name.includes('Google')); // Öncelik Google sesleri
+                    let voice = voices.find(v => v.lang === targetLang && v.name.includes('Google')); 
                     if (!voice) voice = voices.find(v => v.lang.replace('_', '-') === targetLang);
                     if (!voice) voice = voices.find(v => v.lang.toLowerCase().startsWith(langPrefix.toLowerCase()));
-                    // Arapça ve Almanca için ekstra genişletilmiş arama
                     if (!voice && langPrefix === 'ar') voice = voices.find(v => v.lang.toLowerCase().includes('ar'));
                     if (!voice && langPrefix === 'de') voice = voices.find(v => v.lang.toLowerCase().includes('de'));
                     
@@ -635,7 +653,7 @@
                             const range = selection.getRangeAt(0);
                             const rect = range.getBoundingClientRect();
                             if (rect.width > 0 && rect.top > 0) {
-                                let topPos = rect.top - 80; // Pop-up büyüdüğü için biraz daha yukarı alındı
+                                let topPos = rect.top - 80; 
                                 let isBelow = false;
                                 if (rect.top < 150) { topPos = rect.bottom + 15; isBelow = true; }
                                 setPopup({ text: selection.toString().trim(), top: Math.max(10, topPos), left: rect.left + (rect.width / 2), state: 'menu', isBelow: isBelow });
@@ -715,11 +733,10 @@
                 }, 800);
             };
 
-            // RENKLİ KALEM (HIGHLIGHT) UYGULAMA (Geliştirilmiş tam eşleşme)
+            // RENKLİ KALEM (HIGHLIGHT) UYGULAMA 
             const handleHighlight = (e, colorCode) => {
                 if(e) { e.preventDefault(); e.stopPropagation(); }
                 if(popup && popup.text) {
-                    // Tam seçili metni kaydet
                     const textToSave = popup.text;
                     setUserHighlights(prev => {
                         const filtered = prev.filter(h => h.text !== textToSave);
@@ -731,7 +748,6 @@
                 }
             };
             
-            // RENKLİ KALEM SİLME (Üzerine tıklanınca)
             const removeHighlight = (textToRemove) => {
                 setUserHighlights(prev => prev.filter(h => h.text !== textToRemove));
                 showToast("Vurgu kaldırıldı 🧽");
@@ -747,12 +763,11 @@
                 setPopup(null);
             };
 
-            // Not Düzenleme
             const editNote = (note) => {
                 setNoteTargetText(note.quote);
                 setNoteText(note.text);
                 setEditingNoteId(note.id);
-                setActiveNoteColor(note.color || 'default'); // Kayıtlı rengi çek
+                setActiveNoteColor(note.color || 'default'); 
                 setNoteModalOpen(true);
                 setIsNotesDrawerOpen(false);
             };
@@ -787,25 +802,21 @@
                 const keywords = Object.keys(ENCYCLOPEDIA);
                 const highlightTexts = userHighlights.map(h => h.text);
                 
-                // Hiç vurgulanacak kelime yoksa veya Türkçe değilse direkt bas
                 if ((keywords.length === 0 && highlightTexts.length === 0) || currentLang !== 'tr') {
                     return text.split('\n\n').map((p, i) => <p key={i} className={pClass}>{p}</p>);
                 }
                 
-                // Kullanıcı seçimleri (tam eşleşme ve özel karakterleri escape et)
                 const userHighlightRegexes = userHighlights.map(h => ({
                     regexStr: `(${escapeRegExp(h.text)})`,
                     color: h.color,
                     rawText: h.text
                 }));
                 
-                // Ansiklopedi kelimeleri (fuzzy eşleşme)
                 const encRegexes = keywords.map(k => ({
                     regexStr: `(${createFuzzyRegexStr(k)})`,
                     keyword: k
                 }));
                 
-                // Hepsini uzunluğa göre sırala ki, "Mekke dönemi" varken "Mekke"yi bölüp bozmasın.
                 const allRegexObjs = [
                     ...userHighlightRegexes.map(r => ({ ...r, type: 'user', length: r.rawText.length })),
                     ...encRegexes.map(r => ({ ...r, type: 'enc', length: r.keyword.length }))
@@ -817,7 +828,7 @@
                 const regex = new RegExp(combinedRegexStr, 'gi');
                 
                 return text.split('\n\n').map((paragraph, pIndex) => {
-                    const parts = paragraph.split(regex).filter(p => p !== undefined); // Split bazen undefined atar yakalanmayan gruplar için
+                    const parts = paragraph.split(regex).filter(p => p !== undefined); 
                     
                     return (
                         <p key={pIndex} className={pClass}>
@@ -826,7 +837,6 @@
                                 
                                 const normPart = normalizeText(part);
                                 
-                                // Önce kullanıcı vurgusu mu kontrol et
                                 const userHighlight = userHighlights.find(h => h.text.toLowerCase() === part.toLowerCase());
                                 if (userHighlight) {
                                     let colorClass = 'bg-accentYellow/20 text-accentYellow border-accentYellow/50'; 
@@ -836,7 +846,6 @@
                                     return <span key={i} onClick={() => removeHighlight(userHighlight.text)} className={`${colorClass} font-bold border-b-2 px-1 rounded-sm transition-colors theme-transition cursor-pointer`} title="Vurguyu kaldırmak için tıklayın">{part}</span>;
                                 }
 
-                                // Sonra ansiklopedi kelimesi mi kontrol et
                                 const encKeyword = keywords.find(k => normalizeText(k) === normPart);
                                 if (encKeyword) {
                                     return <span key={i} onClick={() => setActiveCard({ title: part, desc: ENCYCLOPEDIA[encKeyword] })} className="text-[#D4AF37] font-bold border-b border-[#D4AF37]/50 cursor-pointer transition-colors duration-300 hover:bg-[#D4AF37]/10 px-1 rounded-sm">{part}</span>;
@@ -852,7 +861,7 @@
             const activeBook = selectedBookKey ? (KULLIYAT_VERISI[selectedBookKey] || FALLBACK_BOOKS[selectedBookKey]) : null;
             const content = selectedChapter ? selectedChapter[language] : '';
             
-            // Tahmini okuma süresi hesaplayıcı (200 kelime/dk ortalama)
+            // Tahmini okuma süresi
             const readingTime = useMemo(() => {
                 if (!content) return 0;
                 return Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
@@ -925,8 +934,8 @@
 
             return (
                 <div className={`min-h-screen relative overflow-hidden font-sans theme-transition flex flex-col ${isFocusMode ? 'focus-mode-active' : ''}`}>
-                    <div className="bg-glow-effect fixed top-[-20%] left-[-10%] w-[50%] h-[50%] blur-[120px] rounded-full pointer-events-none z-0 theme-transition transition-opacity duration-1000" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
-                    <div className="bg-glow-effect fixed bottom-[-20%] right-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none z-0 theme-transition transition-opacity duration-1000" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
+                    <div className="bg-glow-effect fixed top-[-20%] left-[-10%] w-[50%] h-[50%] blur-[120px] rounded-full pointer-events-none z-0 theme-transition transition-opacity duration-1000 animate-pulse-slow" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
+                    <div className="bg-glow-effect fixed bottom-[-20%] right-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none z-0 theme-transition transition-opacity duration-1000 animate-pulse-slow" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
 
                     {toastMsg && (
                         <div className="fixed bottom-28 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-[100] glass-panel px-6 py-3 rounded-full shadow-2xl border border-gold/50 text-gold font-medium animate-slide-up">
@@ -1081,11 +1090,11 @@
                     </div>
 
                     {/* --- HOME SCREEN --- */}
-                    <div className={`absolute inset-0 z-10 transition-all duration-700 ease-in-out ${activeScreen === 'home' ? 'opacity-100 visible translate-x-0' : `opacity-0 invisible ${animationsEnabled ? '-translate-x-full' : 'translate-x-0'}`}`}>
-                        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-12 pb-12 flex flex-col min-h-screen overflow-y-auto custom-scrollbar no-scrollbar">
+                    <div className={`absolute inset-0 z-10 transition-all duration-700 ease-in-out flex flex-col ${activeScreen === 'home' ? 'opacity-100 visible translate-x-0' : `opacity-0 invisible ${animationsEnabled ? '-translate-x-full' : 'translate-x-0'}`}`}>
+                        <div className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-6 pb-12 flex flex-col overflow-y-auto custom-scrollbar no-scrollbar">
                             
                             {/* ANA EKRAN HEADER */}
-                            <header className="flex justify-between items-center mb-8 animate-fade-in">
+                            <header className="flex justify-between items-center mb-8 animate-fade-in shrink-0">
                                 <div className="flex items-center space-x-4">
                                     <button onClick={() => setIsMegaMenuOpen(true)} className="w-12 h-12 rounded-full glass-panel flex items-center justify-center text-themeText hover:text-gold transition-colors"><IconMenu /></button>
                                     <div><h1 className="text-2xl sm:text-3xl font-light tracking-tight text-themeText">{t.appTitle} <span className="font-semibold text-themePrimary">Külliyatı</span></h1><p className="text-xs sm:text-sm text-themeMuted mt-1 opacity-60 uppercase">{t.appSubtitle}</p></div>
@@ -1098,7 +1107,7 @@
                             
                             {/* DİNAMİK ÇOK DİLLİ GÜNÜN TEFEKKÜRÜ */}
                             {dailyQuoteObj && (
-                                <div className="mb-6 p-5 glass-panel rounded-2xl border border-gold/30 relative overflow-hidden animate-slide-up shadow-lg">
+                                <div className="mb-6 p-5 glass-panel rounded-2xl border border-gold/30 relative overflow-hidden animate-slide-up shadow-lg shrink-0">
                                     <div className="absolute top-0 left-0 w-1.5 h-full bg-gold"></div>
                                     <div className="flex items-start space-x-4">
                                         <div className="text-gold mt-1"><IconSparkles size={20}/></div>
@@ -1109,7 +1118,7 @@
 
                             {/* KALDIĞIM YERDEN DEVAM ET BANNER'I */}
                             {lastRead && (
-                                <button onClick={() => handleBookClick(lastRead.bookKey, lastRead.chapterId)} className="w-full mb-8 p-4 glass-panel rounded-2xl border border-gold/50 relative overflow-hidden animate-slide-up shadow-[0_0_15px_rgba(212,175,55,0.15)] group transition-all duration-300 hover:bg-gold/10 hover:border-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] text-left">
+                                <button onClick={() => handleBookClick(lastRead.bookKey, lastRead.chapterId)} className="w-full mb-6 p-4 glass-panel rounded-2xl border border-gold/50 relative overflow-hidden animate-slide-up shadow-[0_0_15px_rgba(212,175,55,0.15)] group transition-all duration-300 hover:bg-gold/10 hover:border-gold hover:shadow-[0_0_20px_rgba(212,175,55,0.3)] text-left shrink-0">
                                     <div className="absolute top-0 left-0 w-1.5 h-full bg-gold"></div>
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
@@ -1124,20 +1133,22 @@
                                 </button>
                             )}
 
-                            {/* KİTAPLAR (Çok Dilli Başlıklar İle) */}
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 flex-grow content-center animate-slide-up" style={{animationDelay: '0.2s'}}>
-                                {orderedBooks.map(({key, book}) => (
-                                    <div key={key} onClick={() => handleBookClick(key)} className="group cursor-pointer relative">
-                                        <div className="aspect-[2/3] w-full rounded-md book-card-bg flex flex-col items-center justify-center transition-all duration-500 transform group-hover:-translate-y-3 group-hover:shadow-2xl overflow-hidden relative" style={{ boxShadow: '0 20px 40px -10px var(--primary-glow)' }}>
-                                            <div className="absolute top-0 bottom-0 left-4 sm:left-6 w-px bg-themeBorder opacity-30"></div>
-                                            <span className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-500" style={{ color: 'var(--primary)', filter: 'brightness(1.5)' }}>{book.symbol}</span>
-                                            <div className="text-center relative z-10 px-4">
-                                                <h2 className="text-xl sm:text-2xl font-serif font-medium tracking-wide text-themeText mb-1">{t[`${key}Title`] || book.title}</h2>
-                                                <p className="text-[10px] uppercase tracking-[0.3em] text-themeMuted/80">{t[`${key}Sub`] || book.subtitle}</p>
+                            {/* KİTAPLAR (SAYFA ORTASINA ALINMIŞ YAPI) */}
+                            <div className="flex-1 flex flex-col justify-center w-full min-h-[50vh]">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 animate-slide-up" style={{animationDelay: '0.2s'}}>
+                                    {orderedBooks.map(({key, book}) => (
+                                        <div key={key} onClick={() => handleBookClick(key)} className="group cursor-pointer relative">
+                                            <div className="aspect-[2/3] w-full rounded-md book-card-bg flex flex-col items-center justify-center transition-all duration-500 transform group-hover:-translate-y-3 group-hover:scale-105 group-hover:shadow-2xl overflow-hidden relative" style={{ boxShadow: '0 20px 40px -10px var(--primary-glow)' }}>
+                                                <div className="absolute top-0 bottom-0 left-4 sm:left-6 w-px bg-themeBorder opacity-30"></div>
+                                                <span className="text-4xl mb-6 group-hover:scale-110 transition-transform duration-500" style={{ color: 'var(--primary)', filter: 'brightness(1.5)' }}>{book.symbol}</span>
+                                                <div className="text-center relative z-10 px-4">
+                                                    <h2 className="text-xl sm:text-2xl font-serif font-medium tracking-wide text-themeText mb-1">{t[`${key}Title`] || book.title}</h2>
+                                                    <p className="text-[10px] uppercase tracking-[0.3em] text-themeMuted/80">{t[`${key}Sub`] || book.subtitle}</p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1150,7 +1161,7 @@
                              <div className="h-full bg-gold transition-all duration-150 ease-out" style={{ width: `${scrollProgress}%`, boxShadow: '0 0 12px rgba(212,175,55,0.9)' }}></div>
                         </div>
 
-                        {/* YUKARI ÇIK BUTONU (Ekstra Eklenti) */}
+                        {/* YUKARI ÇIK BUTONU */}
                         <button 
                             onClick={() => readingContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
                             className={`fixed bottom-24 right-6 z-[90] p-3 rounded-full bg-gold text-themeBg shadow-[0_0_15px_rgba(212,175,55,0.5)] transition-all duration-300 transform ${scrollProgress > 10 && activeScreen === 'reading' && !isFocusMode ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0 pointer-events-none'} hover:scale-110`}
@@ -1211,6 +1222,11 @@
                             </div>
                             <div className="absolute left-1/2 transform -translate-x-1/2 text-center opacity-0 lg:opacity-100 pointer-events-none"><span className="text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: 'var(--primary)' }}>{t[`${activeBook?.key}Title`] || activeBook?.title}</span></div>
                             <div className="flex items-center space-x-1 sm:space-x-2">
+                                {/* HIZLI YAZI BÜYÜTME/KÜÇÜLTME (Ekstra) */}
+                                <button onClick={() => setFontSize(f => Math.max(14, f - 2))} className="p-1 sm:p-2 text-themeMuted hover:text-gold transition-colors font-serif font-bold text-sm" title="Yazıyı Küçült">A-</button>
+                                <button onClick={() => setFontSize(f => Math.min(30, f + 2))} className="p-1 sm:p-2 text-themeMuted hover:text-gold transition-colors font-serif font-bold text-lg" title="Yazıyı Büyüt">A+</button>
+                                <div className="w-px h-5 bg-themeBorder mx-1"></div>
+
                                 <button onClick={() => setIsFocusMode(!isFocusMode)} className={`p-2 rounded-full transition-colors flex items-center space-x-1 shadow-sm ${isFocusMode ? 'text-gold bg-gold/10' : 'text-themeMuted hover:text-gold'}`} title="Odak Modu (Tam Ekran)"><IconEye /></button>
                                 <button onClick={() => setIsTimelineOpen(true)} className="p-2 text-themeMuted hover:text-gold rounded-full transition-colors hidden sm:block" title={t.timeline}><IconHourglass /></button>
                                 <button onClick={() => setIsNotesDrawerOpen(true)} className="flex items-center space-x-2 p-2 text-themeMuted hover:text-gold rounded-full transition-colors" title={t.myNotes}><IconNotebook /></button>
@@ -1223,6 +1239,10 @@
                             <div className={`transition-all ${animationsEnabled ? 'duration-500 ease-out' : 'duration-0'} ${isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'}`}>
                                 <div className="text-center mb-8">
                                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-medium text-themeText mb-4">{selectedChapter?.title}</h1>
+                                    
+                                    {/* ARAPÇA BESMELE (Ekstra Özel Eklenti) */}
+                                    <div className="text-4xl font-arabic text-gold mb-6 mt-2 opacity-80" title="Bismillahirrahmanirrahim">﷽</div>
+
                                     <div className="w-16 h-px mx-auto mb-4" style={{ backgroundColor: 'var(--primary)', opacity: 0.5 }}></div>
                                     
                                     {/* TAHMİNİ OKUMA SÜRESİ */}
