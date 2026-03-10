@@ -90,6 +90,10 @@
             color-scheme: light;
         }
 
+        /* YAZI TİPİ GEÇİŞ DESTEĞİ */
+        .font-style-serif .prose-zen p { font-family: 'Lora', serif; }
+        .font-style-sans .prose-zen p { font-family: 'Plus Jakarta Sans', sans-serif; }
+
         body {
             background-color: var(--bg-main);
             color: var(--text-main);
@@ -142,7 +146,7 @@
         }
 
         .text-arabic {
-            font-family: 'Amiri', 'Scheherazade New', serif;
+            font-family: 'Amiri', 'Scheherazade New', serif !important;
             direction: rtl;
             font-size: 1.4em; 
             line-height: 2.4;
@@ -172,7 +176,7 @@
                 dictionary: "Suffa Lügati", settings: "Ayarlar", contact: "Bize Yazın",
                 searchPlaceholder: "Külliyatta ara...", noResult: "Sonuç bulunamadı.",
                 emptyNotes: "Henüz defterinize bir not eklemediniz.\nOkurken metinleri seçerek \"Not Al\"abilirsiniz.",
-                theme: "Tema", fontSize: "Yazı Boyutu", anim: "Sayfa Geçiş Animasyonu", langSelect: "Okuma Dili Seçimi",
+                theme: "Tema", fontSize: "Yazı Boyutu", fontFamily: "Yazı Tipi", anim: "Sayfa Geçiş Animasyonu", langSelect: "Okuma Dili Seçimi",
                 cancel: "İptal", save: "Kaydet", takeNoteHint: "Bu kısımdan anladığım...", noteTitle: "📝 Suffa Not Defteri",
                 highlight: "Altını Çiz", takeNote: "Not Al", assistant: "Siyer Asistanı", aiTranslate: "AI Çeviri",
                 thinking: "Asistan tefekkür ediyor...", dailyThought: "Günün Tefekkürü", timeline: "Siyer Kronolojisi",
@@ -192,7 +196,8 @@
                 kuranTitle: "Kur'ân Bilinci", kuranSub: "Hayat Kitabımız",
                 sunnetTitle: "Sünnet Bilinci", sunnetSub: "Nebevi Rehberlik",
                 siyerTitle: "Siyer Bilinci", siyerSub: "Hz. Muhammed'in (sav) İzinde",
-                sahabeTitle: "Sahâbe Bilinci", sahabeSub: "Yıldız Nesil"
+                sahabeTitle: "Sahâbe Bilinci", sahabeSub: "Yıldız Nesil",
+                readTime: "Tahmini Okuma", min: "dk"
             },
             ing: {
                 appTitle: "Suffa", appSubtitle: "Digital Reading Platform",
@@ -201,7 +206,7 @@
                 dictionary: "Suffa Dictionary", settings: "Settings", contact: "Contact Us",
                 searchPlaceholder: "Search...", noResult: "No results found.",
                 emptyNotes: "You haven't added any notes yet.\nSelect text while reading to \"Take Note\".",
-                theme: "Theme", fontSize: "Font Size", anim: "Page Transitions", langSelect: "Reading Language",
+                theme: "Theme", fontSize: "Font Size", fontFamily: "Font Family", anim: "Page Transitions", langSelect: "Reading Language",
                 cancel: "Cancel", save: "Save", takeNoteHint: "My reflections on this...", noteTitle: "📝 Suffa Notebook",
                 highlight: "Highlight", takeNote: "Take Note", assistant: "Siyer Assistant", aiTranslate: "AI Translate",
                 thinking: "Assistant is contemplating...", dailyThought: "Thought of the Day", timeline: "Siyer Timeline",
@@ -221,7 +226,8 @@
                 kuranTitle: "Quran Consciousness", kuranSub: "Our Book of Life",
                 sunnetTitle: "Sunnah Consciousness", sunnetSub: "Prophetic Guidance",
                 siyerTitle: "Siyer Consciousness", siyerSub: "In the Footsteps of the Prophet (pbuh)",
-                sahabeTitle: "Sahaba Consciousness", sahabeSub: "The Star Generation"
+                sahabeTitle: "Sahaba Consciousness", sahabeSub: "The Star Generation",
+                readTime: "Est. Reading", min: "min"
             },
             alm: {
                 appTitle: "Suffa", appSubtitle: "Digitale Leseplattform",
@@ -230,7 +236,7 @@
                 dictionary: "Suffa Wörterbuch", settings: "Einstellungen", contact: "Kontaktiere uns",
                 searchPlaceholder: "Suchen...", noResult: "Keine Ergebnisse gefunden.",
                 emptyNotes: "Sie haben noch keine Notizen hinzugefügt.\nWählen Sie Text aus, um eine \"Notiz zu machen\".",
-                theme: "Thema", fontSize: "Schriftgröße", anim: "Seitenübergänge", langSelect: "Lesesprache",
+                theme: "Thema", fontSize: "Schriftgröße", fontFamily: "Schriftart", anim: "Seitenübergänge", langSelect: "Lesesprache",
                 cancel: "Abbrechen", save: "Speichern", takeNoteHint: "Meine Gedanken dazu...", noteTitle: "📝 Suffa Notizbuch",
                 highlight: "Markieren", takeNote: "Notieren", assistant: "Siyer Assistent", aiTranslate: "KI Übersetzen",
                 thinking: "Assistent denkt nach...", dailyThought: "Gedanke des Tages", timeline: "Siyer-Zeitleiste",
@@ -250,7 +256,8 @@
                 kuranTitle: "Koranbewusstsein", kuranSub: "Unser Buch des Lebens",
                 sunnetTitle: "Sunnah-Bewusstsein", sunnetSub: "Prophetische Führung",
                 siyerTitle: "Siyer-Bewusstsein", siyerSub: "Auf den Spuren des Propheten (saw)",
-                sahabeTitle: "Sahaba-Bewusstsein", sahabeSub: "Die Sternengeneration"
+                sahabeTitle: "Sahaba-Bewusstsein", sahabeSub: "Die Sternengeneration",
+                readTime: "Lesezeit", min: "Min."
             },
             arp: {
                 appTitle: "الصفة", appSubtitle: "منصة القراءة الرقمية",
@@ -259,7 +266,7 @@
                 dictionary: "قاموس الصفة", settings: "الإعدادات", contact: "اتصل بنا",
                 searchPlaceholder: "بحث...", noResult: "لم يتم العثور على نتائج.",
                 emptyNotes: "لم تضف أي ملاحظات بعد.\nحدد النص أثناء القراءة لـ \"تدوين ملاحظة\".",
-                theme: "الموضوع", fontSize: "حجم الخط", anim: "انتقالات الصفحة", langSelect: "لغة القراءة",
+                theme: "الموضوع", fontSize: "حجم الخط", fontFamily: "الخط", anim: "انتقالات الصفحة", langSelect: "لغة القراءة",
                 cancel: "إلغاء", save: "حفظ", takeNoteHint: "تأملاتي في هذا...", noteTitle: "📝 دفتر الصفة",
                 highlight: "تمييز", takeNote: "تدوين ملاحظة", assistant: "مساعد السيرة", aiTranslate: "ترجمة ذكية",
                 thinking: "المساعد يتأمل...", dailyThought: "فكرة اليوم", timeline: "الجدول الزمني للسيرة",
@@ -279,12 +286,13 @@
                 kuranTitle: "وعي القرآن", kuranSub: "كتاب حياتنا",
                 sunnetTitle: "وعي السنة", sunnetSub: "التوجيه النبوي",
                 siyerTitle: "وعي السيرة", siyerSub: "على خطى النبي (صلى الله عليه وسلم)",
-                sahabeTitle: "وعي الصحابة", sahabeSub: "جيل النجوم"
+                sahabeTitle: "وعي الصحابة", sahabeSub: "جيل النجوم",
+                readTime: "وقت القراءة", min: "دقيقة"
             }
         };
 
         // ==========================================
-        // DATA BINDING (Mevcut window objelerinden veya Fallback'ten çekilir)
+        // DATA BINDING
         // ==========================================
         const DEFAULT_QUOTES = [
             {
@@ -295,14 +303,12 @@
             }
         ];
         
-        // window.QUOTES var ve objelerden oluşuyorsa onu kullan, yoksa DEFAULT kullan
         const APP_QUOTES = (window.QUOTES && window.QUOTES.length > 0 && typeof window.QUOTES[0] === 'object') 
             ? window.QUOTES 
             : DEFAULT_QUOTES;
 
         const KULLIYAT_VERISI = window.KULLIYAT_VERISI || {};
         
-        // Lügat verisi yoksa yedek olarak ekleyelim
         const ENCYCLOPEDIA = window.ENCYCLOPEDIA || {
             "Bedir": "Müslümanların Mekkeli müşriklerle yaptığı ilk büyük savaştır. Furkan günü olarak da bilinir.",
             "Uhud": "Müslümanların Mekkeli müşriklerle yaptığı ikinci büyük savaştır. İtaat sınavının verildiği yerdir.",
@@ -310,7 +316,6 @@
         };
         const ASSISTANT_DB = window.ASSISTANT_DB || {};
 
-        // Veri boş gelirse Ana ekranda iskelet göstermek ve tıklandığında sorunsuz açılması için FALBACK_BOOKS (İçinde sahte bölümler var)
         const FALLBACK_BOOKS = {
             kuran: { title: "Kur'ân Bilinci", subtitle: "Hayat Kitabımız", symbol: '✧', chapters: [{id: 'fk1', title: '1. Bölüm: Vahyin Gölgesinde', tr: "Kur'an bilinci, hayatı ilahi kelamın rehberliğinde okumaktır. Bedir ve Uhud gibi imtihanlarda sabrı kuşanmaktır...", ing: "Quran consciousness is reading life under the guidance of divine words...", alm: "Koranbewusstsein ist das Lesen des Lebens unter der Führung göttlicher Worte...", arp: "وعي القرآن هو قراءة الحياة بتوجيه من الكلمات الإلهية..."}] },
             sunnet: { title: "Sünnet Bilinci", subtitle: "Nebevi Rehberlik", symbol: '☀', chapters: [{id: 'fs1', title: '1. Bölüm: Yaşayan Kur\'an', tr: "Sünnet bilinci, Hz. Peygamber'in izini adım adım takip etmektir...", ing: "Sunnah consciousness is following the Prophet's footsteps step by step...", alm: "Sunnah-Bewusstsein bedeutet, den Spuren des Propheten Schritt für Schritt zu folgen...", arp: "وعي السنة هو اتباع خطى النبي خطوة بخطوة..."}] },
@@ -383,30 +388,33 @@
             // Reading & Content State
             const [selectedChapter, setSelectedChapter] = useState(null);
             
-            // KESİN DİL BAŞLANGICI: İlk render'da mutlaka localStorage'ı okur, boşsa 'tr' başlatır.
-            const [language, setLanguage] = useState(() => {
-                if (typeof window !== 'undefined') {
-                    return localStorage.getItem('suffa_lang') || 'tr';
-                }
-                return 'tr';
-            });
+            // KESİN DİL BAŞLANGICI: Daima ve zorunlu 'tr' ile başlar. Başka dilde kalmış olsa bile ezer.
+            const [language, setLanguage] = useState('tr');
 
             const [activeCard, setActiveCard] = useState(null); // Lügat kartı
-            const [userHighlights, setUserHighlights] = useState([]); // [{text: "...", color: "yellow"}]
+            
+            // FOSFORLU KALEM KAYITLARI: Kalıcı olarak hafızaya yazılır.
+            const [userHighlights, setUserHighlights] = useState(() => {
+                if (typeof window !== 'undefined') {
+                    return JSON.parse(localStorage.getItem('suffa_highlights') || '[]');
+                }
+                return [];
+            });
             
             // UI States
             const [theme, setTheme] = useState('oled'); 
             const [fontSize, setFontSize] = useState(18);
+            const [fontFamily, setFontFamily] = useState('serif'); // YENİ: Yazı Tipi
             const [animationsEnabled, setAnimationsEnabled] = useState(true);
             const [popup, setPopup] = useState(null); 
-            const [dailyQuoteObj, setDailyQuoteObj] = useState(null); // Günün tefekkürü obje state'i
+            const [dailyQuoteObj, setDailyQuoteObj] = useState(null); 
             const [isTransitioning, setIsTransitioning] = useState(false);
             
             // Modals & Drawers
             const [noteModalOpen, setNoteModalOpen] = useState(false);
             const [noteText, setNoteText] = useState("");
             const [noteTargetText, setNoteTargetText] = useState("");
-            const [editingNoteId, setEditingNoteId] = useState(null); // Düzenlenen not ID'si
+            const [editingNoteId, setEditingNoteId] = useState(null);
             const [toastMsg, setToastMsg] = useState(null);
             const [isTimelineOpen, setIsTimelineOpen] = useState(false);
 
@@ -414,7 +422,7 @@
             const [isMegaMenuOpen, setIsMegaMenuOpen] = useState(false);
             const [sidebarTab, setSidebarTab] = useState(null); 
             const [isFihristOpen, setIsFihristOpen] = useState(false);
-            const [isNotesDrawerOpen, setIsNotesDrawerOpen] = useState(false); // Kök düzeye çekildi!
+            const [isNotesDrawerOpen, setIsNotesDrawerOpen] = useState(false);
 
             // Auto-Scroll State
             const [isAutoScrolling, setIsAutoScrolling] = useState(false);
@@ -438,14 +446,19 @@
 
             const t = UI[language] || UI['tr']; 
 
-            // Mount
+            // Mount & Initial Force Language
             useEffect(() => {
+                // Zorunlu dil ayarı her girişte tr'ye zorlar
+                localStorage.setItem('suffa_lang', 'tr');
+
                 const storedNotes = localStorage.getItem('suffa_notes');
                 if (storedNotes) setSavedNotes(JSON.parse(storedNotes));
                 const storedTheme = localStorage.getItem('suffa_theme');
                 if (storedTheme) setTheme(storedTheme);
                 const storedFontSize = localStorage.getItem('suffa_fontsize');
                 if (storedFontSize) setFontSize(parseInt(storedFontSize));
+                const storedFontFamily = localStorage.getItem('suffa_fontfamily');
+                if (storedFontFamily) setFontFamily(storedFontFamily);
                 const storedAnim = localStorage.getItem('suffa_anim');
                 if (storedAnim !== null) setAnimationsEnabled(storedAnim === 'true');
                 const storedLastRead = localStorage.getItem('suffa_lastread');
@@ -458,14 +471,16 @@
 
             // Settings Sync
             useEffect(() => {
-                document.documentElement.className = `theme-${theme} ${!animationsEnabled ? 'no-transitions' : ''}`;
+                document.documentElement.className = `theme-${theme} font-style-${fontFamily} ${!animationsEnabled ? 'no-transitions' : ''}`;
                 localStorage.setItem('suffa_theme', theme);
                 localStorage.setItem('suffa_fontsize', fontSize);
+                localStorage.setItem('suffa_fontfamily', fontFamily);
                 localStorage.setItem('suffa_anim', animationsEnabled);
                 localStorage.setItem('suffa_lang', language);
-            }, [theme, animationsEnabled, fontSize, language]);
+            }, [theme, animationsEnabled, fontSize, fontFamily, language]);
 
             useEffect(() => { localStorage.setItem('suffa_notes', JSON.stringify(savedNotes)); }, [savedNotes]);
+            useEffect(() => { localStorage.setItem('suffa_highlights', JSON.stringify(userHighlights)); }, [userHighlights]);
 
             useEffect(() => {
                 if (selectedBookKey && selectedChapter) {
@@ -475,54 +490,51 @@
                 }
             }, [selectedBookKey, selectedChapter]);
 
+            // Ses motorlarını çek
             useEffect(() => {
                 const loadVoices = () => setVoices(synth.getVoices());
                 loadVoices();
                 if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
             }, [synth]);
 
-            // --- PROGRESS BAR DİNLEYİCİSİ ---
-            useEffect(() => {
-                const handleScroll = () => {
-                    if (readingContainerRef.current) {
-                        const { scrollTop, scrollHeight, clientHeight } = readingContainerRef.current;
-                        const progress = (scrollTop / (scrollHeight - clientHeight)) * 100;
-                        setScrollProgress(progress || 0);
-                    }
-                };
-
-                const container = readingContainerRef.current;
-                if (container && activeScreen === 'reading') {
-                    container.addEventListener('scroll', handleScroll, { passive: true });
-                    return () => container.removeEventListener('scroll', handleScroll);
+            // --- PROGRESS BAR DİNLEYİCİSİ (React Event ile Bağlı) ---
+            const handleScroll = (e) => {
+                const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+                if (scrollHeight > clientHeight) {
+                    const progress = (scrollTop / (scrollHeight - clientHeight)) * 100;
+                    setScrollProgress(progress);
+                } else {
+                    setScrollProgress(0);
                 }
-            }, [activeScreen]);
+            };
 
-            // --- OTOMATİK KAYDIRMA MOTORU ---
+            // --- KESİNTİSİZ OTOMATİK KAYDIRMA MOTORU (setInterval ile tam garanti) ---
             useEffect(() => {
                 let interval = null;
                 if (isAutoScrolling && readingContainerRef.current) {
                     interval = setInterval(() => {
-                        if (readingContainerRef.current) {
-                            readingContainerRef.current.scrollBy({ top: 1, left: 0, behavior: 'auto' });
-                            const { scrollTop, scrollHeight, clientHeight } = readingContainerRef.current;
+                        const container = readingContainerRef.current;
+                        if (container) {
+                            container.scrollBy({ top: 1, behavior: 'auto' }); 
+                            const { scrollTop, scrollHeight, clientHeight } = container;
+                            // Sona gelirse durdur
                             if (scrollTop + clientHeight >= scrollHeight - 2) {
                                 setIsAutoScrolling(false);
                             }
                         }
-                    }, 40); 
+                    }, 30); // Akıcı okuma hızı
                 }
                 return () => clearInterval(interval);
             }, [isAutoScrolling]);
 
-            // Kaydırma durdurma dinleyicileri
+            // Kaydırma müdahalesi ile otomatik kaydırmayı durdurma
             useEffect(() => {
                 const container = readingContainerRef.current;
                 const stopScroll = (e) => {
-                    if (e.target.closest('.auto-scroll-btn')) return;
+                    if (e.target.closest('.auto-scroll-btn')) return; // Butonlara basarken durmasın
                     if (isAutoScrolling) setIsAutoScrolling(false);
                 };
-                if (container) {
+                if (container && activeScreen === 'reading') {
                     container.addEventListener('wheel', stopScroll, { passive: true });
                     container.addEventListener('touchstart', stopScroll, { passive: true });
                     container.addEventListener('mousedown', stopScroll, { passive: true });
@@ -536,22 +548,27 @@
                 };
             }, [isAutoScrolling, activeScreen]);
 
-            // --- TTS ---
+            // --- MULTI-LANGUAGE TTS MOTORU ---
             const speakNextChunk = () => {
                 if (chunkIndexRef.current >= chunksRef.current.length) { setIsPlaying(false); return; }
                 const text = chunksRef.current[chunkIndexRef.current];
                 const utterance = new SpeechSynthesisUtterance(text);
+                
                 const langMap = { 'tr': 'tr-TR', 'ing': 'en-US', 'alm': 'de-DE', 'arp': 'ar-SA' };
-                utterance.lang = langMap[language] || 'tr-TR';
+                const targetLang = langMap[language] || 'tr-TR';
+                const langPrefix = targetLang.split('-')[0]; // tr, en, de, ar
+                
+                utterance.lang = targetLang;
                 utterance.rate = playbackRate;
+                
                 if (voices.length > 0) {
-                    const targetLang = langMap[language];
-                    const langPrefix = targetLang.split('-')[0];
-                    let voice = voices.find(v => v.lang.replace('_', '-') === targetLang);
+                    // İşletim sistemindeki en uygun sesi bulma algoritması
+                    let voice = voices.find(v => v.lang === targetLang && v.name.includes('Google'));
+                    if (!voice) voice = voices.find(v => v.lang.replace('_', '-') === targetLang);
                     if (!voice) voice = voices.find(v => v.lang.startsWith(langPrefix));
-                    if (!voice) voice = voices.find(v => v.default) || voices[0];
                     if (voice) utterance.voice = voice;
                 }
+                
                 utterance.onend = () => { chunkIndexRef.current++; speakNextChunk(); };
                 utterance.onerror = () => { chunkIndexRef.current++; speakNextChunk(); };
                 synth.speak(utterance);
@@ -575,7 +592,7 @@
                 if(synth.speaking && isPlaying) { stopAudioCompletely(); setTimeout(() => playAudio(), 100); } 
             };
 
-            // Text Selection Popup
+            // Text Selection Popup Dinleyicisi
             useEffect(() => {
                 const handleSelectionEnd = () => {
                     if(noteModalOpen) return;
@@ -606,7 +623,6 @@
             const handleBookClick = (bookKey, chapterId = null) => {
                 const bookData = KULLIYAT_VERISI[bookKey] || FALLBACK_BOOKS[bookKey];
                 
-                // KESİN AÇILIŞ: Veri olmasa da fallback chapters array'i bulunduğu için kitap sorunsuz açılacak.
                 if (!bookData || !bookData.chapters || bookData.chapters.length === 0) {
                     showToast(t.bookNotReady);
                     return;
@@ -637,12 +653,12 @@
             const goHome = () => {
                 setActiveScreen('home');
                 setPopup(null);
-                setActiveCard(null); // Lügat'ı kapat
+                setActiveCard(null);
                 stopAudioCompletely();
                 setIsMegaMenuOpen(false);
                 setIsFihristOpen(false);
                 setIsNotesDrawerOpen(false);
-                setTimeout(() => { setSelectedBookKey(null); setSelectedChapter(null); setScrollProgress(0); }, 400);
+                setTimeout(() => { setSelectedBookKey(null); setSelectedChapter(null); setScrollProgress(0); setIsAutoScrolling(false); }, 400);
             };
 
             // --- SİYER ASİSTANI NOKTA ATIŞI ANALİZ ---
@@ -665,14 +681,25 @@
                 }, 800);
             };
 
+            // RENKLİ KALEM (HIGHLIGHT) UYGULAMA
             const handleHighlight = (e, colorCode) => {
                 if(e) { e.preventDefault(); e.stopPropagation(); }
                 if(popup && popup.text) {
-                    setUserHighlights(prev => [...prev, { text: popup.text, color: colorCode }]);
+                    // Aynı metin önceden vurgulanmışsa güncelle, yoksa ekle
+                    setUserHighlights(prev => {
+                        const filtered = prev.filter(h => normalizeText(h.text) !== normalizeText(popup.text));
+                        return [...filtered, { text: popup.text, color: colorCode }];
+                    });
                     showToast(t.highlight + " 🖍️");
                     setPopup(null);
                     window.getSelection().removeAllRanges();
                 }
+            };
+            
+            // RENKLİ KALEM SİLME (Üzerine tıklanınca)
+            const removeHighlight = (textToRemove) => {
+                setUserHighlights(prev => prev.filter(h => normalizeText(h.text) !== normalizeText(textToRemove)));
+                showToast("Vurgu kaldırıldı 🧽");
             };
 
             const openNoteModal = (e) => {
@@ -739,12 +766,12 @@
                                 
                                 const userHighlight = userHighlights.find(k => normalizeText(k.text) === normPart);
                                 if (userHighlight) {
-                                    // FOSFORLU KALEM RENKLERİ - Seçilen kelimenin altını tam o renkle çizer
+                                    // FOSFORLU KALEM RENKLERİ - Seçilen kelimenin altını tam o renkle çizer. Silmek için tıklanabilir.
                                     let colorClass = 'bg-yellow-500/20 text-yellow-500 border-yellow-500'; 
                                     if (userHighlight.color === 'green') colorClass = 'bg-green-500/20 text-green-500 border-green-500';
                                     if (userHighlight.color === 'red') colorClass = 'bg-red-500/20 text-red-500 border-red-500';
                                     
-                                    return <span key={i} className={`${colorClass} font-bold border-b px-1 rounded-sm transition-colors theme-transition`}>{part}</span>;
+                                    return <span key={i} onClick={() => removeHighlight(userHighlight.text)} className={`${colorClass} font-bold border-b px-1 rounded-sm transition-colors theme-transition cursor-pointer`} title="Vurguyu kaldırmak için tıklayın">{part}</span>;
                                 }
                                 return part;
                             })}
@@ -755,6 +782,12 @@
 
             const activeBook = selectedBookKey ? (KULLIYAT_VERISI[selectedBookKey] || FALLBACK_BOOKS[selectedBookKey]) : null;
             const content = selectedChapter ? selectedChapter[language] : '';
+            
+            // Tahmini okuma süresi hesaplayıcı (200 kelime/dk ortalama)
+            const readingTime = useMemo(() => {
+                if (!content) return 0;
+                return Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
+            }, [content]);
 
             const renderAccordionContent = (tabId) => {
                 switch(tabId) {
@@ -780,9 +813,17 @@
                                     </div>
                                 </div>
                                 <div className="w-full h-px bg-themeBorder/50"></div>
-                                <a href="https://suffameclisleri.com" target="_blank" className="w-full py-3 rounded-xl bg-gold/10 border border-gold/30 text-gold text-sm font-semibold hover:bg-gold/20 transition-colors flex items-center justify-center space-x-2 shadow-sm">
-                                    <IconVolume /> <span>{t.originalAudio}</span>
-                                </a>
+                                
+                                <div>
+                                    <label className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-3 block">{t.fontFamily}</label>
+                                    <div className="flex space-x-2">
+                                        <button onClick={() => setFontFamily('serif')} className={`flex-1 py-2 rounded-lg text-sm border font-serif ${fontFamily === 'serif' ? 'border-gold text-gold bg-gold/10' : 'border-themeBorder text-themeMuted hover:border-themeText'}`}>Klasik (Serif)</button>
+                                        <button onClick={() => setFontFamily('sans')} className={`flex-1 py-2 rounded-lg text-sm border font-sans ${fontFamily === 'sans' ? 'border-gold text-gold bg-gold/10' : 'border-themeBorder text-themeMuted hover:border-themeText'}`}>Modern (Sans)</button>
+                                    </div>
+                                </div>
+
+                                <div className="w-full h-px bg-themeBorder/50"></div>
+
                                 <div>
                                     <label className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-3 block">{t.theme}</label>
                                     <div className="flex space-x-2">
@@ -807,7 +848,6 @@
                 }
             };
 
-            // ZORUNLU KİTAP SIRALAMASI VE İSKELET DESTEĞİ: kuran, sunnet, siyer, sahabe
             const bookOrderKeys = ['kuran', 'sunnet', 'siyer', 'sahabe'];
             const orderedBooks = bookOrderKeys.map(key => ({ 
                 key, 
@@ -1007,10 +1047,19 @@
                     </div>
 
                     {/* --- READING SCREEN --- */}
-                    <div ref={readingContainerRef} className={`absolute inset-0 z-20 overflow-y-auto transition-all duration-700 ease-in-out ${activeScreen === 'reading' ? 'opacity-100 visible translate-x-0' : `opacity-0 invisible ${animationsEnabled ? 'translate-x-full' : 'translate-x-0'} pointer-events-none`}`}>
+                    <div ref={readingContainerRef} onScroll={handleScroll} className={`absolute inset-0 z-20 overflow-y-auto transition-all duration-700 ease-in-out ${activeScreen === 'reading' ? 'opacity-100 visible translate-x-0' : `opacity-0 invisible ${animationsEnabled ? 'translate-x-full' : 'translate-x-0'} pointer-events-none`}`}>
                         
                         {/* READING PROGRESS BAR */}
                         <div className="fixed top-0 left-0 h-[3px] bg-gold z-[100] transition-all duration-150 ease-out" style={{ width: `${scrollProgress}%`, boxShadow: '0 0 12px rgba(212,175,55,0.9)' }}></div>
+
+                        {/* YUKARI ÇIK BUTONU (Ekstra Eklenti) */}
+                        <button 
+                            onClick={() => readingContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' })}
+                            className={`fixed bottom-24 right-6 z-[90] p-3 rounded-full bg-gold text-themeBg shadow-[0_0_15px_rgba(212,175,55,0.5)] transition-all duration-300 transform ${scrollProgress > 10 && activeScreen === 'reading' ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0 pointer-events-none'} hover:scale-110`}
+                            title="Yukarı Çık"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+                        </button>
 
                         <div className={`fixed inset-0 z-[60] transition-all duration-500 ${isFihristOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
                             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setIsFihristOpen(false)}></div>
@@ -1071,9 +1120,17 @@
                             </div>
                         </div>
 
-                        <div className="w-full max-w-2xl lg:max-w-3xl mx-auto px-5 sm:px-8 pt-12 pb-64">
+                        <div className="w-full max-w-2xl lg:max-w-3xl mx-auto px-5 sm:px-8 pt-12 pb-64 relative">
                             <div className={`transition-all ${animationsEnabled ? 'duration-500 ease-out' : 'duration-0'} ${isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'}`}>
-                                <div className="text-center mb-12"><h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-medium text-themeText mb-4">{selectedChapter?.title}</h1><div className="w-16 h-px mx-auto" style={{ backgroundColor: 'var(--primary)', opacity: 0.5 }}></div></div>
+                                <div className="text-center mb-8">
+                                    <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-medium text-themeText mb-4">{selectedChapter?.title}</h1>
+                                    <div className="w-16 h-px mx-auto mb-4" style={{ backgroundColor: 'var(--primary)', opacity: 0.5 }}></div>
+                                    
+                                    {/* TAHMİNİ OKUMA SÜRESİ (Ekstra Eklenti) */}
+                                    <div className="flex justify-center items-center gap-2 text-xs text-themeMuted uppercase tracking-widest font-semibold">
+                                        <IconHourglass /> <span>{t.readTime}: {readingTime} {t.min}</span>
+                                    </div>
+                                </div>
                                 <article className="prose-zen font-serif text-themeText/90" style={{ fontSize: `${fontSize}px` }}>{renderTextWithHighlights(content, language)}</article>
                             </div>
                         </div>
