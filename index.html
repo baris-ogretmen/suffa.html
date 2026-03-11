@@ -222,6 +222,11 @@
                 sahabeTitle: "Sahâbe Bilinci", sahabeSub: "Yıldız Nesil",
                 
                 chapterPrefix: "Bölüm",
+                "Vahyin Gölgesinde": "Vahyin Gölgesinde",
+                "Yaşayan Kur'an": "Yaşayan Kur'an",
+                "Mekke Dönemi": "Mekke Dönemi",
+                "Gökteki Yıldızlar": "Gökteki Yıldızlar",
+
                 readTime: "Tahmini Okuma", min: "dk", noteColor: "Etiket Rengi:", nextChapter: "Sonraki Bölüm", prevChapter: "Önceki Bölüm",
                 quickActions: "Hızlı İşlemler"
             },
@@ -249,6 +254,11 @@
                 sahabeTitle: "Sahaba Consciousness", sahabeSub: "The Star Generation",
                 
                 chapterPrefix: "Chapter",
+                "Vahyin Gölgesinde": "In the Shadow of Revelation",
+                "Yaşayan Kur'an": "The Living Quran",
+                "Mekke Dönemi": "Meccan Period",
+                "Gökteki Yıldızlar": "Stars in the Sky",
+
                 readTime: "Est. Reading", min: "min", noteColor: "Tag Color:", nextChapter: "Next Chapter", prevChapter: "Previous Chapter",
                 quickActions: "Quick Actions"
             },
@@ -276,6 +286,11 @@
                 sahabeTitle: "Sahaba-Bewusstsein", sahabeSub: "Die Sternengeneration",
                 
                 chapterPrefix: "Kapitel",
+                "Vahyin Gölgesinde": "Im Schatten der Offenbarung",
+                "Yaşayan Kur'an": "Der lebendige Koran",
+                "Mekke Dönemi": "Mekkanische Periode",
+                "Gökteki Yıldızlar": "Sterne am Himmel",
+
                 readTime: "Lesezeit", min: "Min.", noteColor: "Tag-Farbe:", nextChapter: "Nächstes Kapitel", prevChapter: "Vorheriges Kapitel",
                 quickActions: "Schnelle Aktionen"
             },
@@ -303,6 +318,11 @@
                 sahabeTitle: "وعي الصحابة", sahabeSub: "جيل النجوم",
                 
                 chapterPrefix: "الفصل",
+                "Vahyin Gölgesinde": "في ظل الوحي",
+                "Yaşayan Kur'an": "القرآن الحي",
+                "Mekke Dönemi": "العهد المكي",
+                "Gökteki Yıldızlar": "نجوم في السماء",
+
                 readTime: "وقت القراءة", min: "دقيقة", noteColor: "لون العلامة:", nextChapter: "الفصل التالي", prevChapter: "الفصل السابق",
                 quickActions: "إجراءات سريعة"
             }
@@ -334,10 +354,10 @@
         const ASSISTANT_DB = window.ASSISTANT_DB || {};
 
         const FALLBACK_BOOKS = {
-            kuran: { key: 'kuran', symbol: '✧', chapters: [{id: 'fk1', title: '1. Bölüm: Vahyin Gölgesinde', title_ing: 'Chapter 1: In the Shadow of Revelation', title_alm: 'Kapitel 1: Im Schatten der Offenbarung', title_arp: 'الفصل 1: في ظل الوحي', tr: "Kur'an bilinci, hayatı ilahi kelamın rehberliğinde okumaktır. Bedir ve Uhud gibi imtihanlarda sabrı kuşanmaktır...", ing: "Quran consciousness is reading life under the guidance of divine words...", alm: "Koranbewusstsein ist das Lesen des Lebens unter der Führung göttlicher Worte...", arp: "وعي القرآن هو قراءة الحياة بتوجيه من الكلمات الإلهية..."}] },
-            sunnet: { key: 'sunnet', symbol: '☀', chapters: [{id: 'fs1', title: '1. Bölüm: Yaşayan Kur\'an', title_ing: 'Chapter 1: The Living Quran', title_alm: 'Kapitel 1: Der lebendige Koran', title_arp: 'الفصل 1: القرآن الحي', tr: "Sünnet bilinci, Hz. Peygamber'in izini adım adım takip etmektir...", ing: "Sunnah consciousness is following the Prophet's footsteps step by step...", alm: "Sunnah-Bewusstsein bedeutet, den Spuren des Propheten Schritt für Schritt zu folgen...", arp: "وعي السنة هو اتباع خطى النبي خطوة بخطوة..."}] },
-            siyer: { key: 'siyer', symbol: '☾', chapters: [{id: 'fsi1', title: '1. Bölüm: Mekke Dönemi', title_ing: 'Chapter 1: Meccan Period', title_alm: 'Kapitel 1: Mekkanische Periode', title_arp: 'الفصل 1: العهد المكي', tr: "Mekke dönemi, zorluklar karşısında imanın çelikleştiği yıllardır...", ing: "The Meccan period is the years when faith hardened like steel in the face of difficulties...", alm: "Die mekkanische Periode sind die Jahre, in denen der Glaube angesichts von Schwierigkeiten wie Stahl gehärtet wurde...", arp: "العهد المكي هو السنوات التي تصلب فيها الإيمان كالصلب في وجه الصعوبات..."}] },
-            sahabe: { key: 'sahabe', symbol: '★', chapters: [{id: 'fsh1', title: '1. Bölüm: Gökteki Yıldızlar', title_ing: 'Chapter 1: Stars in the Sky', title_alm: 'Kapitel 1: Sterne am Himmel', title_arp: 'الفصل 1: نجوم في السماء', tr: "Sahâbe bilinci, gökteki yıldızlar gibi yolumuzu aydınlatan neslin izinden gitmektir. Suffa ehli gibi olmaktır...", ing: "Sahaba consciousness is following the generation that illuminates our path like stars in the sky...", alm: "Das Sahaba-Bewusstsein besteht darin, der Generation zu folgen, die unseren Weg wie Sterne am Himmel erleuchtet...", arp: "وعي الصحابة هو اتباع الجيل الذي يضيء طريقنا كالنجوم في السماء..."}] }
+            kuran: { key: 'kuran', symbol: '✧', chapters: [{id: 'fk1', title: '1. Bölüm: Vahyin Gölgesinde', tr: "Kur'an bilinci, hayatı ilahi kelamın rehberliğinde okumaktır. Bedir ve Uhud gibi imtihanlarda sabrı kuşanmaktır...", ing: "Quran consciousness is reading life under the guidance of divine words...", alm: "Koranbewusstsein ist das Lesen des Lebens unter der Führung göttlicher Worte...", arp: "وعي القرآن هو قراءة الحياة بتوجيه من الكلمات الإلهية..."}] },
+            sunnet: { key: 'sunnet', symbol: '☀', chapters: [{id: 'fs1', title: '1. Bölüm: Yaşayan Kur\'an', tr: "Sünnet bilinci, Hz. Peygamber'in izini adım adım takip etmektir...", ing: "Sunnah consciousness is following the Prophet's footsteps step by step...", alm: "Sunnah-Bewusstsein bedeutet, den Spuren des Propheten Schritt für Schritt zu folgen...", arp: "وعي السنة هو اتباع خطى النبي خطوة بخطوة..."}] },
+            siyer: { key: 'siyer', symbol: '☾', chapters: [{id: 'fsi1', title: '1. Bölüm: Mekke Dönemi', tr: "Mekke dönemi, zorluklar karşısında imanın çelikleştiği yıllardır...", ing: "The Meccan period is the years when faith hardened like steel in the face of difficulties...", alm: "Die mekkanische Periode sind die Jahre, in denen der Glaube angesichts von Schwierigkeiten wie Stahl gehärtet wurde...", arp: "العهد المكي هو السنوات التي تصلب فيها الإيمان كالصلب في وجه الصعوبات..."}] },
+            sahabe: { key: 'sahabe', symbol: '★', chapters: [{id: 'fsh1', title: '1. Bölüm: Gökteki Yıldızlar', tr: "Sahâbe bilinci, gökteki yıldızlar gibi yolumuzu aydınlatan neslin izinden gitmektir. Suffa ehli gibi olmaktır...", ing: "Sahaba consciousness is following the generation that illuminates our path like stars in the sky...", alm: "Das Sahaba-Bewusstsein besteht darin, der Generation zu folgen, die unseren Weg wie Sterne am Himmel erleuchtet...", arp: "وعي الصحابة هو اتباع الجيل الذي يضيء طريقنا كالنجوم في السماء..."}] }
         };
 
         // --- YARDIMCI FONKSİYONLAR ---
@@ -463,7 +483,8 @@
             const [isAutoScrolling, setIsAutoScrolling] = useState(false);
             const readingContainerRef = useRef(null); 
             const scrollAccumulatorRef = useRef(0); 
-            const lastTapTime = useRef(0); // Çift Tıklama için
+            const autoScrollFrameRef = useRef(null);
+            const lastTapTime = useRef(0); 
             
             // Progress Bar State
             const [scrollProgress, setScrollProgress] = useState(0);
@@ -480,7 +501,7 @@
             const [voices, setVoices] = useState([]);
             const chunkIndexRef = useRef(0);
             const chunksRef = useRef([]);
-            const isRateChangingRef = useRef(false); // Yeni: Hız değişimi takibi için
+            const isRateChangingRef = useRef(false);
 
             const t = UI[language] || UI['tr']; 
 
@@ -556,39 +577,47 @@
 
             // --- KUSURSUZ OTOMATİK KAYDIRMA MOTORU (requestAnimationFrame DOM Mod) ---
             useEffect(() => {
-                let animationFrameId;
                 let lastTime = performance.now();
-                const scrollSpeed = 0.05; // 1 saniyede 50px yağ gibi akış
+                const scrollSpeed = 0.04; // 1 saniyede yaklaşık 40px yağ gibi akış
 
                 const scroll = (currentTime) => {
                     if (isAutoScrolling && readingContainerRef.current) {
                         const deltaTime = currentTime - lastTime;
                         lastTime = currentTime;
                         
-                        readingContainerRef.current.scrollTop += scrollSpeed * deltaTime;
+                        scrollAccumulatorRef.current += scrollSpeed * deltaTime;
                         
-                        const { scrollTop, scrollHeight, clientHeight } = readingContainerRef.current;
-                        if (Math.abs(scrollHeight - clientHeight - scrollTop) <= 2) {
-                            setIsAutoScrolling(false);
-                            return;
+                        if (scrollAccumulatorRef.current >= 1) {
+                            const pixelsToScroll = Math.floor(scrollAccumulatorRef.current);
+                            readingContainerRef.current.scrollTop += pixelsToScroll;
+                            scrollAccumulatorRef.current -= pixelsToScroll;
+                            
+                            const { scrollTop, scrollHeight, clientHeight } = readingContainerRef.current;
+                            if (Math.ceil(scrollTop + clientHeight) >= scrollHeight - 2) {
+                                setIsAutoScrolling(false);
+                                return;
+                            }
                         }
-                        animationFrameId = requestAnimationFrame(scroll);
+                        autoScrollFrameRef.current = requestAnimationFrame(scroll);
                     }
                 };
 
                 if (isAutoScrolling) {
                     lastTime = performance.now();
-                    animationFrameId = requestAnimationFrame(scroll);
+                    scrollAccumulatorRef.current = 0;
+                    autoScrollFrameRef.current = requestAnimationFrame(scroll);
                 }
 
-                return () => cancelAnimationFrame(animationFrameId);
+                return () => {
+                    if (autoScrollFrameRef.current) cancelAnimationFrame(autoScrollFrameRef.current);
+                };
             }, [isAutoScrolling]);
 
             // Kaydırma müdahalesi ile otomatik kaydırmayı durdurma
             useEffect(() => {
                 const container = readingContainerRef.current;
                 const stopScroll = (e) => {
-                    if (e.target.closest('.auto-scroll-btn')) return; 
+                    if (e.target.closest('.auto-scroll-btn') || e.target.closest('button')) return; 
                     if (isAutoScrolling) setIsAutoScrolling(false);
                 };
                 if (container && activeScreen === 'reading') {
@@ -685,11 +714,11 @@
                 setPlaybackRate(newRate);
                 
                 if (isPlaying) {
-                    isRateChangingRef.current = true; // Otomatik sonrakine geçmeyi engelle
-                    synth.cancel(); // Mevcut okumayı anında kes
+                    isRateChangingRef.current = true; 
+                    synth.cancel(); 
                     setTimeout(() => {
                         isRateChangingRef.current = false;
-                        speakNextChunk(newRate); // Kaldığı indeksten yeni hızla devam et
+                        speakNextChunk(newRate); 
                     }, 50);
                 } 
             };
@@ -708,7 +737,6 @@
                                 let isBelow = false;
                                 if (rect.top < 100) { topPos = rect.bottom + 15; isBelow = true; }
                                 
-                                // Ekrana sığdırma koruması (Kenarlardan taşmayı önler)
                                 let leftPos = rect.left + (rect.width / 2);
                                 const popupWidth = 320; 
                                 const screenWidth = window.innerWidth;
@@ -887,19 +915,22 @@
                 showToast("Not silindi 🗑️");
             };
 
-            // DİNAMİK BAŞLIK ÇEKME (İSTENİLEN DEĞİŞİKLİK)
+            // DİNAMİK VE DERİN BAŞLIK ÇEVİRİSİ (DEEP LOCALIZATION)
             const getTranslatedChapterTitle = (ch) => {
                 if (!ch) return "";
-                const originalTitle = ch['title_' + language] || ch.title; // TAM İSTENEN GÜNCELLEME
+                const originalTitle = ch['title_' + language] || ch.title; 
                 if (!originalTitle) return "";
                 
+                // "1. Bölüm: Vahyin Gölgesinde" formatını yakalama
                 const match = originalTitle.match(/^(\d+)\.\s*Bölüm:\s*(.*)$/i);
                 if (match && language !== 'tr') {
                     const num = match[1];
                     const rest = match[2];
-                    return `${t.chapterPrefix} ${num}: ${rest}`;
+                    // UI sözlüğünde "Vahyin Gölgesinde" varsa onu al, yoksa aynen bırak
+                    const translatedRest = t[rest] || rest;
+                    return `${t.chapterPrefix} ${num}: ${translatedRest}`;
                 }
-                return originalTitle;
+                return t[originalTitle] || originalTitle;
             };
 
             const renderTextWithHighlights = (text, currentLang) => {
@@ -1057,7 +1088,6 @@
                 }
             };
 
-            // DİNAMİK KİTAP SİSTEMİ
             const availableKeys = (window.KULLIYAT_VERISI && Object.keys(window.KULLIYAT_VERISI).length > 0)
                 ? Object.keys(window.KULLIYAT_VERISI)
                 : Object.keys(FALLBACK_BOOKS);
@@ -1244,7 +1274,7 @@
                                 )}
 
                                 {lastRead && (
-                                    <button onClick={() => handleBookClick(lastRead.bookKey, lastRead.chapterId)} className="w-full p-4 glass-panel rounded-2xl border border-gold/50 relative overflow-hidden shadow-[0_0_15px_rgba(212,175,55,0.15)] group transition-all duration-300 hover:bg-gold/10 hover:border-gold animate-border-pulse text-left">
+                                    <button onClick={() => handleBookClick(lastRead.bookKey, lastRead.chapterId)} className="w-full p-4 glass-panel rounded-2xl border border-gold/50 relative overflow-hidden shadow-[0_0_15px_rgba(212,175,55,0.15)] group transition-all duration-300 hover:bg-gold/10 hover:border-gold animate-border-pulse text-left shrink-0">
                                         <div className="absolute top-0 left-0 w-1.5 h-full bg-gold"></div>
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center space-x-4">
@@ -1331,15 +1361,15 @@
                             <div className={`fixed z-50 -translate-x-1/2 mb-3 shadow-2xl flex flex-col ${popup.isBelow ? 'mt-3' : ''}`} style={{ top: popup.top, left: popup.left }} onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); }}>
                                 {popup.state === 'menu' && (
                                     <div className="animate-fade-in flex items-center space-x-1 sm:space-x-2 px-2 py-1.5 sm:px-3 sm:py-2 bg-themePanel backdrop-blur-2xl border border-themeBorder shadow-[0_10px_30px_rgba(0,0,0,0.5)] rounded-full max-w-[90vw] overflow-x-auto no-scrollbar">
-                                        <button onClick={(e) => handleHighlight(e, 'yellow')} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-accentYellow shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(250,204,21,0.6)] border border-white/20" title="Sarı İle Çiz"></button>
-                                        <button onClick={(e) => handleHighlight(e, 'green')} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-accentGreen shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(34,197,94,0.6)] border border-white/20" title="Yeşil İle Çiz"></button>
-                                        <button onClick={(e) => handleHighlight(e, 'red')} className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-accentRed shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(239,68,68,0.6)] border border-white/20" title="Kırmızı İle Çiz"></button>
+                                        <button onClick={(e) => handleHighlight(e, 'yellow')} className="w-6 h-6 rounded-full bg-accentYellow shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(250,204,21,0.6)] border border-white/20" title="Sarı İle Çiz"></button>
+                                        <button onClick={(e) => handleHighlight(e, 'green')} className="w-6 h-6 rounded-full bg-accentGreen shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(34,197,94,0.6)] border border-white/20" title="Yeşil İle Çiz"></button>
+                                        <button onClick={(e) => handleHighlight(e, 'red')} className="w-6 h-6 rounded-full bg-accentRed shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(239,68,68,0.6)] border border-white/20" title="Kırmızı İle Çiz"></button>
                                         
                                         <div className="w-px h-5 bg-themeBorder/50 shrink-0 mx-1"></div>
                                         
-                                        <button onClick={(e) => openNoteModal(e)} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] sm:text-xs font-bold text-themeText bg-themeBg/50 hover:bg-themeBorder rounded-full shrink-0 transition-colors">📝 <span className="hidden sm:inline">{t.takeNote}</span></button>
-                                        <button onClick={(e) => handleSiyerAssistant(e)} className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] sm:text-xs font-bold text-gold bg-gold/10 hover:bg-gold/20 rounded-full shrink-0 transition-colors">✨ <span className="hidden sm:inline">{t.assistant}</span></button>
-                                        <button onClick={(e) => copyToClipboard(e, popup.text)} className="flex items-center justify-center p-1.5 text-themeMuted hover:text-themeText bg-themeBg/50 rounded-full shrink-0 transition-colors" title={t.share}><IconShare size={14}/></button>
+                                        <button onClick={(e) => openNoteModal(e)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-themeText bg-themeBg/50 hover:bg-themeBorder rounded-full shrink-0 transition-colors">📝 {t.takeNote}</button>
+                                        <button onClick={(e) => handleSiyerAssistant(e)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-gold bg-gold/10 hover:bg-gold/20 rounded-full shrink-0 transition-colors">✨ {t.assistant}</button>
+                                        <button onClick={(e) => copyToClipboard(e, popup.text)} className="flex items-center justify-center p-2 text-themeMuted hover:text-themeText bg-themeBg/50 rounded-full shrink-0 transition-colors" title={t.share}><IconShare size={14}/></button>
                                     </div>
                                 )}
                                 {popup.state === 'assistant_loading' && <div className="glass-panel rounded-xl px-5 py-4 text-sm text-themeMuted flex flex-col items-center space-y-3 min-w-[220px]"><div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin"></div><span className="animate-pulse">{t.thinking}</span></div>}
@@ -1352,7 +1382,7 @@
                                 <button onClick={(e) => { e.stopPropagation(); goHome(); }} className="p-2 text-themeMuted hover:text-themeText rounded-full transition-colors"><IconChevronLeft /></button>
                                 <button onClick={(e) => { e.stopPropagation(); setIsFihristOpen(true); triggerHaptic();}} className="flex items-center space-x-2 text-sm font-medium tracking-wide text-themeMuted hover:text-themeText px-2 py-2 rounded-lg hover:bg-themeBorder transition-colors"><IconMenu /> <span className="hidden sm:block">{t.index}</span></button>
                             </div>
-                            <div className="absolute left-1/2 transform -translate-x-1/2 text-center opacity-0 lg:opacity-100 pointer-events-none"><span className="text-xs uppercase tracking-[0.2em] font-semibold" style={{ color: 'var(--primary)' }}>{t[`${activeBook?.key}Title`] || activeBook?.title}</span></div>
+                            <div className="absolute left-1/2 transform -translate-x-1/2 text-center opacity-0 lg:opacity-100 pointer-events-none"><span className="text-xs uppercase tracking-[0.2em] font-semibold truncate max-w-[150px] sm:max-w-none inline-block" style={{ color: 'var(--primary)' }}>{t[`${activeBook?.key}Title`] || activeBook?.title}</span></div>
                             <div className="flex items-center space-x-1 sm:space-x-2">
                                 <button onClick={(e) => { e.stopPropagation(); setFontSize(f => Math.max(14, f - 2)); triggerHaptic();}} className="p-1 sm:p-2 text-themeMuted hover:text-gold transition-colors font-serif font-bold text-sm hidden sm:block" title="Yazıyı Küçült">A-</button>
                                 <button onClick={(e) => { e.stopPropagation(); setFontSize(f => Math.min(30, f + 2)); triggerHaptic();}} className="p-1 sm:p-2 text-themeMuted hover:text-gold transition-colors font-serif font-bold text-lg hidden sm:block" title="Yazıyı Büyüt">A+</button>
