@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Suffa Külliyatı | Dijital Okuma Platformu</title>
     
+    <!-- MOBİL UYGULAMA (PWA) DESTEĞİ İÇİN META ETİKETLERİ -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#030303">
+    <meta name="description" content="Suffa Külliyatı - Muhammed Emin Yıldırım. Bilgiden Bilince dijital okuma platformu.">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -542,6 +549,9 @@
             const chunkIndexRef = useRef(0);
             const chunksRef = useRef([]);
             const isRateChangingRef = useRef(false); 
+            
+            // Wake Lock State
+            const wakeLockRef = useRef(null);
 
             const t = UI[language] || UI['tr']; 
             
@@ -601,6 +611,48 @@
                 loadVoices();
                 if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = loadVoices;
             }, [synth]);
+            
+            // --- EKRANI UYANIK TUTMA (WAKE LOCK API) ---
+            useEffect(() => {
+                const requestWakeLock = async () => {
+                    if ('wakeLock' in navigator && activeScreen === 'reading') {
+                        try {
+                            wakeLockRef.current = await navigator.wakeLock.request('screen');
+                            console.log('Ekran uyanık tutuluyor.');
+                        } catch (err) {
+                            console.log('Wake Lock Error:', err);
+                        }
+                    }
+                };
+
+                const releaseWakeLock = async () => {
+                    if (wakeLockRef.current) {
+                        await wakeLockRef.current.release();
+                        wakeLockRef.current = null;
+                        console.log('Ekran kilidi serbest bırakıldı.');
+                    }
+                };
+
+                if (activeScreen === 'reading') {
+                    requestWakeLock();
+                } else {
+                    releaseWakeLock();
+                }
+
+                // Sayfa görünürlüğü değiştiğinde Wake Lock yenilemesi
+                const handleVisibilityChange = () => {
+                    if (wakeLockRef.current !== null && document.visibilityState === 'visible' && activeScreen === 'reading') {
+                        requestWakeLock();
+                    }
+                };
+                
+                document.addEventListener('visibilitychange', handleVisibilityChange);
+
+                return () => {
+                    releaseWakeLock();
+                    document.removeEventListener('visibilitychange', handleVisibilityChange);
+                };
+            }, [activeScreen]);
 
             // --- PROGRESS BAR DİNLEYİCİSİ ---
             const handleScroll = (e) => {
@@ -789,7 +841,7 @@
                 const shareData = {
                     title: 'Suffa Külliyatı',
                     text: t.shareAppDesc,
-                    url: 'https://suffameclisi.com'
+                    url: 'https://www.suffameclisleri.com/'
                 };
 
                 if (navigator.share) {
@@ -1261,7 +1313,7 @@
                                 
                                 <div className="bg-white p-3 rounded-xl shadow-lg mb-6 border-4 border-gold/20 relative group">
                                     <div className="absolute inset-0 bg-gold opacity-0 group-hover:opacity-10 transition-opacity rounded-xl"></div>
-                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://suffameclisi.com&color=000000&bgcolor=ffffff" alt="Suffa Meclisi QR Code" className="w-40 h-40 object-contain" />
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=https://www.suffameclisleri.com/&color=000000&bgcolor=ffffff" alt="Suffa Meclisi QR Code" className="w-40 h-40 object-contain" />
                                 </div>
 
                                 <button onClick={shareAppNative} className="w-full py-3.5 bg-gradient-to-r from-[#D4AF37] to-[#B8942E] text-themeBg font-bold text-sm rounded-xl shadow-[0_10px_20px_rgba(212,175,55,0.3)] hover:scale-105 transition-all flex items-center justify-center gap-2">
@@ -1334,7 +1386,7 @@
                             <div className="p-6 border-t border-themeBorder bg-themePanel/30 flex flex-col items-center">
                                 <div className="text-xs font-semibold text-themeMuted uppercase tracking-wider mb-3">{t.contact}</div>
                                 <div className="flex justify-center space-x-5 text-themeMuted">
-                                    <a href="https://suffameclisi.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors transform hover:scale-110" title="Web Sitemiz"><IconGlobe /></a>
+                                    <a href="https://www.suffameclisleri.com/" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors transform hover:scale-110" title="Web Sitemiz"><IconGlobe /></a>
                                     <a href="https://www.youtube.com/@siyertv" target="_blank" rel="noopener noreferrer" className="hover:text-red-500 transition-colors transform hover:scale-110"><IconYoutube /></a>
                                     <a href="https://wa.me/902125679041" target="_blank" rel="noopener noreferrer" className="hover:text-[#25D366] transition-colors transform hover:scale-110"><IconWhatsApp /></a>
                                     <a href="https://t.me/siyervakfi" target="_blank" rel="noopener noreferrer" className="hover:text-[#0088cc] transition-colors transform hover:scale-110"><IconTelegram /></a>
