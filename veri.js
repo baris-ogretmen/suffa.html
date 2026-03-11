@@ -4,7 +4,12 @@
 // ==========================================
 
 const QUOTES = [
-    "İhlas, aradan dünyayı çıkarıp sadece O'nu (cc) görmektir..."
+    {
+        tr: "İhlas, aradan dünyayı çıkarıp sadece O'nu (cc) görmektir...",
+        ing: "Sincerity is removing the world from between and seeing only Him (cc)...",
+        alm: "Aufrichtigkeit bedeutet, die Welt dazwischen zu entfernen und nur Ihn (cc) zu sehen...",
+        arp: "الإخلاص هو إزالة الدنيا من البين ورؤيته سبحانه وتعالى فقط..."
+    }
 ];
 
 const KULLIYAT_VERISI = {
@@ -29,7 +34,9 @@ const KULLIYAT_VERISI = {
 };
 
 const ENCYCLOPEDIA = {
-    'Bedir': { title: 'Bedir Gazvesi', arabic: 'غزوة بدر', desc: 'Hakkı batıldan ayıran "Yevmü\'l-Furkan" (Furkan Günü) olarak anılan ilk büyük savaştır.' }
+    'Bedir': 'Hakkı batıldan ayıran "Yevmü\'l-Furkan" (Furkan Günü) olarak anılan ilk büyük savaştır.',
+    'Uhud': 'Müslümanların Mekkeli müşriklerle yaptığı ikinci büyük savaştır. İtaat sınavının verildiği yerdir.',
+    'Suffa': 'Mescid-i Nebevi\'nin bitişiğinde, ilim tahsil eden yoksul sahabelerin kaldığı gölgelik.'
 };
 
 const ASSISTANT_DB = {
@@ -41,4 +48,3 @@ window.QUOTES = QUOTES;
 window.KULLIYAT_VERISI = KULLIYAT_VERISI;
 window.ENCYCLOPEDIA = ENCYCLOPEDIA;
 window.ASSISTANT_DB = ASSISTANT_DB;
-
