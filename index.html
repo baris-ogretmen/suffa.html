@@ -37,17 +37,17 @@
                         'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'slide-up': 'slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
                         'slide-in-right': 'slideInRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
-                        'audio-wave': 'audioWave 1.2s ease-in-out infinite',
                         'pulse-slow': 'pulse 5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'border-pulse': 'borderPulse 3s infinite',
+                        'twinkle': 'twinkle 4s infinite alternate',
                     },
                     keyframes: {
                         fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
                         slideUp: { '0%': { opacity: '0', transform: 'translateY(30px)' }, '100%': { opacity: '1', transform: 'translateY(0)' } },
                         slideInRight: { '0%': { opacity: '0', transform: 'translateX(30px)' }, '100%': { opacity: '1', transform: 'translateX(0)' } },
-                        audioWave: { '0%, 100%': { height: '4px' }, '50%': { height: '18px' } },
                         pulse: { '0%, 100%': { opacity: '1' }, '50%': { opacity: '.6' } },
-                        borderPulse: { '0%, 100%': { borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 15px rgba(212,175,55,0.1)' }, '50%': { borderColor: 'rgba(212,175,55,0.8)', boxShadow: '0 0 25px rgba(212,175,55,0.3)' } }
+                        borderPulse: { '0%, 100%': { borderColor: 'rgba(212,175,55,0.3)', boxShadow: '0 0 15px rgba(212,175,55,0.1)' }, '50%': { borderColor: 'rgba(212,175,55,0.8)', boxShadow: '0 0 25px rgba(212,175,55,0.3)' } },
+                        twinkle: { '0%': { opacity: '0.2', transform: 'scale(0.8)' }, '100%': { opacity: '0.8', transform: 'scale(1.2)' } }
                     }
                 }
             }
@@ -155,11 +155,25 @@
             box-shadow: 0 20px 40px -10px var(--primary-glow);
         }
 
+        /* KİTAP İÇERİĞİ DÜZENİ VE DROP CAP (İLK HARF BÜYÜTME) */
         .prose-zen p {
             margin-bottom: 1.8em;
             line-height: 1.85;
             letter-spacing: -0.015em;
             transition: font-size 0.3s ease;
+            text-align: justify; /* Gerçek kitap görünümü */
+        }
+
+        /* Yalnızca Arapça olmayan dillerde ilk harfi büyüt (Drop Cap) */
+        .has-dropcap .prose-zen p:first-of-type::first-letter {
+            float: left;
+            font-size: 3.6em;
+            line-height: 0.8;
+            padding-top: 0.05em;
+            padding-right: 0.1em;
+            color: #D4AF37;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .text-arabic {
@@ -168,7 +182,7 @@
             font-size: 1.5em; 
             line-height: 2.5;
             padding: 0.5rem 0;
-            text-align: right;
+            text-align: right !important;
         }
 
         ::selection {
@@ -184,6 +198,13 @@
         /* Mobil Alt Çekmece (Bottom Sheet) Çizgisi */
         .drag-handle {
             width: 40px; height: 5px; background: var(--text-muted); opacity: 0.4; border-radius: 10px; margin: 0 auto 16px auto;
+        }
+
+        /* Sihirli Yıldız Efekti */
+        .magical-dust {
+            position: absolute; width: 3px; height: 3px; background: transparent;
+            box-shadow: 15vw 20vh #D4AF37, 45vw 65vh #D4AF37, 85vw 15vh #D4AF37, 25vw 85vh #D4AF37, 95vw 95vh #D4AF37, 10vw 50vh #D4AF37, 70vw 40vh #D4AF37;
+            border-radius: 50%; animation: twinkle 4s infinite alternate; z-index: 0; pointer-events: none; opacity: 0.4;
         }
     </style>
 </head>
@@ -215,7 +236,6 @@
                 timelineHicret: "Hicret", timelineHicretDesc: "Yesrib'in Medine'ye dönüşümü. İmanın yeryüzünde yurt bulduğu o kutlu yolculuk.",
                 timelineMedine: "Medine Dönemi", timelineMedineDesc: "İslam toplumunun inşası, Bedir, Uhud, Hendek ve yeryüzüne yayılan adalet güneşi.",
                 
-                // DEEP TRANSLATIONS FOR BOOKS
                 kuranTitle: "Kur'ân Bilinci", kuranSub: "Hayat Kitabımız",
                 sunnetTitle: "Sünnet Bilinci", sunnetSub: "Nebevi Rehberlik",
                 siyerTitle: "Siyer Bilinci", siyerSub: "Hz. Muhammed'in (sav) İzinde",
@@ -227,8 +247,7 @@
                 "Mekke Dönemi": "Mekke Dönemi",
                 "Gökteki Yıldızlar": "Gökteki Yıldızlar",
 
-                readTime: "Tahmini Okuma", min: "dk", noteColor: "Etiket Rengi:", nextChapter: "Sonraki Bölüm", prevChapter: "Önceki Bölüm",
-                quickActions: "Hızlı İşlemler"
+                readTime: "Tahmini Okuma", min: "dk", noteColor: "Etiket Rengi:", nextChapter: "Sonraki Bölüm", prevChapter: "Önceki Bölüm"
             },
             ing: {
                 appTitle: "Suffa", appSubtitle: "Digital Reading Platform",
@@ -259,8 +278,7 @@
                 "Mekke Dönemi": "Meccan Period",
                 "Gökteki Yıldızlar": "Stars in the Sky",
 
-                readTime: "Est. Reading", min: "min", noteColor: "Tag Color:", nextChapter: "Next Chapter", prevChapter: "Previous Chapter",
-                quickActions: "Quick Actions"
+                readTime: "Est. Reading", min: "min", noteColor: "Tag Color:", nextChapter: "Next Chapter", prevChapter: "Previous Chapter"
             },
             alm: {
                 appTitle: "Suffa", appSubtitle: "Digitale Leseplattform",
@@ -291,8 +309,7 @@
                 "Mekke Dönemi": "Mekkanische Periode",
                 "Gökteki Yıldızlar": "Sterne am Himmel",
 
-                readTime: "Lesezeit", min: "Min.", noteColor: "Tag-Farbe:", nextChapter: "Nächstes Kapitel", prevChapter: "Vorheriges Kapitel",
-                quickActions: "Schnelle Aktionen"
+                readTime: "Lesezeit", min: "Min.", noteColor: "Tag-Farbe:", nextChapter: "Nächstes Kapitel", prevChapter: "Vorheriges Kapitel"
             },
             arp: {
                 appTitle: "الصفة", appSubtitle: "منصة القراءة الرقمية",
@@ -323,13 +340,32 @@
                 "Mekke Dönemi": "العهد المكي",
                 "Gökteki Yıldızlar": "نجوم في السماء",
 
-                readTime: "وقت القراءة", min: "دقيقة", noteColor: "لون العلامة:", nextChapter: "الفصل التالي", prevChapter: "الفصل السابق",
-                quickActions: "إجراءات سريعة"
+                readTime: "وقت القراءة", min: "دقيقة", noteColor: "لون العلامة:", nextChapter: "الفصل التالي", prevChapter: "الفصل السابق"
             }
         };
 
         // ==========================================
-        // DATA BINDING
+        // DİNAMİK LÜGAT (ENCYCLOPEDIA) VERİ TABANI
+        // ==========================================
+        const ENCYCLOPEDIA_DB = {
+            tr: { "Bedir": "Müslümanların Mekkeli müşriklerle yaptığı ilk büyük savaştır.", "Uhud": "Müslümanların Mekkeli müşriklerle yaptığı ikinci büyük savaştır.", "Suffa": "Mescid-i Nebevi'nin bitişiğinde, ilim tahsil eden yoksul sahabelerin kaldığı gölgelik." },
+            ing: { "Badr": "The first major battle between Muslims and the polytheists of Mecca.", "Uhud": "The second major battle.", "Suffa": "The shaded area adjacent to the Prophet's Mosque dedicated to learning." },
+            alm: { "Badr": "Die erste große Schlacht zwischen Muslimen und den Polytheisten aus Mekka.", "Uhud": "Die zweite große Schlacht.", "Suffa": "Der schattige Bereich neben der Prophetenmoschee, der dem Lernen gewidmet ist." },
+            arp: { "بدر": "أول معركة كبرى بين المسلمين ومشركي مكة.", "أحد": "المعركة الكبرى الثانية.", "الصفة": "المنطقة المظللة المجاورة للمسجد النبوي المخصصة لطلب العلم." }
+        };
+
+        // ==========================================
+        // DİNAMİK ASİSTAN VERİ TABANI
+        // ==========================================
+        const ASSISTANT_DB = {
+            tr: { default: "Kardeşlerim, bu satırlarda Asr-ı Saadet'in o sarsılmaz imanı ve teslimiyeti var. Seçtiğiniz bu kavram üzerine tefekkür etmek, nebevi çizgide bir şuur inşası için muazzam bir adımdır." },
+            ing: { default: "My brothers, in these lines lies the unshakeable faith and submission of the Age of Bliss. Reflecting on this concept is a tremendous step for building consciousness on the prophetic path." },
+            alm: { default: "Meine Brüder, in diesen Zeilen liegt der unerschütterliche Glaube und die Hingabe des Zeitalters der Glückseligkeit. Über dieses Konzept nachzudenken, ist ein enormer Schritt für den Aufbau des Bewusstseins." },
+            arp: { default: "إخوتي، في هذه السطور يكمن الإيمان الراسخ والتسليم في عصر السعادة. إن التأمل في هذا المفهوم هو خطوة عظيمة لبناء الوعي على النهج النبوي." }
+        };
+
+        // ==========================================
+        // DEFAULT QUOTES & KULLIYAT DATA
         // ==========================================
         const DEFAULT_QUOTES = [
             {
@@ -340,24 +376,14 @@
             }
         ];
         
-        const APP_QUOTES = (window.QUOTES && window.QUOTES.length > 0 && typeof window.QUOTES[0] === 'object') 
-            ? window.QUOTES 
-            : DEFAULT_QUOTES;
-
+        const APP_QUOTES = (window.QUOTES && window.QUOTES.length > 0 && typeof window.QUOTES[0] === 'object') ? window.QUOTES : DEFAULT_QUOTES;
         const KULLIYAT_VERISI = window.KULLIYAT_VERISI || {};
-        
-        const ENCYCLOPEDIA = window.ENCYCLOPEDIA || {
-            "Bedir": "Müslümanların Mekkeli müşriklerle yaptığı ilk büyük savaştır. Furkan günü olarak da bilinir.",
-            "Uhud": "Müslümanların Mekkeli müşriklerle yaptığı ikinci büyük savaştır. İtaat sınavının verildiği yerdir.",
-            "Suffa": "Mescid-i Nebevi'nin bitişiğinde, ilim tahsil eden yoksul sahabelerin kaldığı gölgelik."
-        };
-        const ASSISTANT_DB = window.ASSISTANT_DB || {};
 
         const FALLBACK_BOOKS = {
-            kuran: { key: 'kuran', symbol: '✧', chapters: [{id: 'fk1', title: '1. Bölüm: Vahyin Gölgesinde', tr: "Kur'an bilinci, hayatı ilahi kelamın rehberliğinde okumaktır. Bedir ve Uhud gibi imtihanlarda sabrı kuşanmaktır...", ing: "Quran consciousness is reading life under the guidance of divine words...", alm: "Koranbewusstsein ist das Lesen des Lebens unter der Führung göttlicher Worte...", arp: "وعي القرآن هو قراءة الحياة بتوجيه من الكلمات الإلهية..."}] },
-            sunnet: { key: 'sunnet', symbol: '☀', chapters: [{id: 'fs1', title: '1. Bölüm: Yaşayan Kur\'an', tr: "Sünnet bilinci, Hz. Peygamber'in izini adım adım takip etmektir...", ing: "Sunnah consciousness is following the Prophet's footsteps step by step...", alm: "Sunnah-Bewusstsein bedeutet, den Spuren des Propheten Schritt für Schritt zu folgen...", arp: "وعي السنة هو اتباع خطى النبي خطوة بخطوة..."}] },
-            siyer: { key: 'siyer', symbol: '☾', chapters: [{id: 'fsi1', title: '1. Bölüm: Mekke Dönemi', tr: "Mekke dönemi, zorluklar karşısında imanın çelikleştiği yıllardır...", ing: "The Meccan period is the years when faith hardened like steel in the face of difficulties...", alm: "Die mekkanische Periode sind die Jahre, in denen der Glaube angesichts von Schwierigkeiten wie Stahl gehärtet wurde...", arp: "العهد المكي هو السنوات التي تصلب فيها الإيمان كالصلب في وجه الصعوبات..."}] },
-            sahabe: { key: 'sahabe', symbol: '★', chapters: [{id: 'fsh1', title: '1. Bölüm: Gökteki Yıldızlar', tr: "Sahâbe bilinci, gökteki yıldızlar gibi yolumuzu aydınlatan neslin izinden gitmektir. Suffa ehli gibi olmaktır...", ing: "Sahaba consciousness is following the generation that illuminates our path like stars in the sky...", alm: "Das Sahaba-Bewusstsein besteht darin, der Generation zu folgen, die unseren Weg wie Sterne am Himmel erleuchtet...", arp: "وعي الصحابة هو اتباع الجيل الذي يضيء طريقنا كالنجوم في السماء..."}] }
+            kuran: { key: 'kuran', symbol: '✧', chapters: [{id: 'fk1', title: '1. Bölüm: Vahyin Gölgesinde', title_ing: 'Chapter 1: In the Shadow of Revelation', title_alm: 'Kapitel 1: Im Schatten der Offenbarung', title_arp: 'الفصل 1: في ظل الوحي', tr: "Kur'an bilinci, hayatı ilahi kelamın rehberliğinde okumaktır. Bedir ve Uhud gibi imtihanlarda sabrı kuşanmaktır...", ing: "Quran consciousness is reading life under the guidance of divine words...", alm: "Koranbewusstsein ist das Lesen des Lebens unter der Führung göttlicher Worte...", arp: "وعي القرآن هو قراءة الحياة بتوجيه من الكلمات الإلهية..."}] },
+            sunnet: { key: 'sunnet', symbol: '☀', chapters: [{id: 'fs1', title: '1. Bölüm: Yaşayan Kur\'an', title_ing: 'Chapter 1: The Living Quran', title_alm: 'Kapitel 1: Der lebendige Koran', title_arp: 'الفصل 1: القرآن الحي', tr: "Sünnet bilinci, Hz. Peygamber'in izini adım adım takip etmektir...", ing: "Sunnah consciousness is following the Prophet's footsteps step by step...", alm: "Sunnah-Bewusstsein bedeutet, den Spuren des Propheten Schritt für Schritt zu folgen...", arp: "وعي السنة هو اتباع خطى النبي خطوة بخطوة..."}] },
+            siyer: { key: 'siyer', symbol: '☾', chapters: [{id: 'fsi1', title: '1. Bölüm: Mekke Dönemi', title_ing: 'Chapter 1: Meccan Period', title_alm: 'Kapitel 1: Mekkanische Periode', title_arp: 'الفصل 1: العهد المكي', tr: "Mekke dönemi, zorluklar karşısında imanın çelikleştiği yıllardır...", ing: "The Meccan period is the years when faith hardened like steel in the face of difficulties...", alm: "Die mekkanische Periode sind die Jahre, in denen der Glaube angesichts von Schwierigkeiten wie Stahl gehärtet wurde...", arp: "العهد المكي هو السنوات التي تصلب فيها الإيمان كالصلب في وجه الصعوبات..."}] },
+            sahabe: { key: 'sahabe', symbol: '★', chapters: [{id: 'fsh1', title: '1. Bölüm: Gökteki Yıldızlar', title_ing: 'Chapter 1: Stars in the Sky', title_alm: 'Kapitel 1: Sterne am Himmel', title_arp: 'الفصل 1: نجوم في السماء', tr: "Sahâbe bilinci, gökteki yıldızlar gibi yolumuzu aydınlatan neslin izinden gitmektir. Suffa ehli gibi olmaktır...", ing: "Sahaba consciousness is following the generation that illuminates our path like stars in the sky...", alm: "Das Sahaba-Bewusstsein besteht darin, der Generation zu folgen, die unseren Weg wie Sterne am Himmel erleuchtet...", arp: "وعي الصحابة هو اتباع الجيل الذي يضيء طريقنا كالنجوم في السماء..."}] }
         };
 
         // --- YARDIMCI FONKSİYONLAR ---
@@ -393,7 +419,6 @@
             }).join('');
         };
 
-        // Haptic Feedback Helper (Premium Dokunuş)
         const triggerHaptic = () => {
             if (typeof window !== 'undefined' && navigator.vibrate) {
                 navigator.vibrate(30);
@@ -418,7 +443,6 @@
         const IconCloudDownload = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242"/><path d="M12 12v9"/><path d="m8 17 4 4 4-4"/></svg>;
         const IconHourglass = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></svg>;
         const IconYoutube = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2.5 17a2.5 2.5 0 0 1 0-5V5a2 2 0 0 1 2-2h15a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/><path d="m10 8 5 3-5 3V8Z"/></svg>;
-        const IconWeb = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>;
         const IconWhatsApp = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>;
         const IconTelegram = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>;
         const IconX = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4l16 16"/><path d="m4 20 16-16"/></svg>;
@@ -437,17 +461,11 @@
             const [selectedChapter, setSelectedChapter] = useState(null);
             const [isFocusMode, setIsFocusMode] = useState(false); 
             
-            // SAĞLAM, ZORUNLU TÜRKÇE BAŞLANGIÇ
-            const [language, setLanguage] = useState(() => {
-                if (typeof window !== 'undefined') {
-                    return localStorage.getItem('suffa_lang') || 'tr';
-                }
-                return 'tr';
-            });
+            // KESİN DİL BAŞLANGICI: HER ZAMAN TR.
+            const [language, setLanguage] = useState('tr');
 
             const [activeCard, setActiveCard] = useState(null); 
             
-            // FOSFORLU KALEM KAYITLARI
             const [userHighlights, setUserHighlights] = useState(() => {
                 if (typeof window !== 'undefined') {
                     return JSON.parse(localStorage.getItem('suffa_highlights') || '[]');
@@ -500,15 +518,18 @@
             const synth = window.speechSynthesis;
             const [voices, setVoices] = useState([]);
             const chunkIndexRef = useRef(0);
-            const chunksRef = useRef([]);
-            const isRateChangingRef = useRef(false);
+            const isRateChangingRef = useRef(false); 
 
             const t = UI[language] || UI['tr']; 
+            
+            // O Dile ait güncel Sözlük ve Asistan
+            const currentEncyclopedia = ENCYCLOPEDIA_DB[language] || ENCYCLOPEDIA_DB['tr'];
+            const currentAssistantMsg = ASSISTANT_DB[language]?.default || ASSISTANT_DB['tr'].default;
 
             // Mount & LocalStorage Load
             useEffect(() => {
-                const storedLang = localStorage.getItem('suffa_lang');
-                if(!storedLang) localStorage.setItem('suffa_lang', 'tr'); 
+                // Zorunlu Türkçe başlangıç
+                setLanguage('tr'); 
                 
                 const storedNotes = localStorage.getItem('suffa_notes');
                 if (storedNotes) setSavedNotes(JSON.parse(storedNotes));
@@ -528,9 +549,6 @@
                 const storedLastRead = localStorage.getItem('suffa_lastread');
                 if (storedLastRead) setLastRead(JSON.parse(storedLastRead));
 
-                const storedHighlights = localStorage.getItem('suffa_highlights');
-                if (storedHighlights) setUserHighlights(JSON.parse(storedHighlights));
-
                 if(APP_QUOTES && APP_QUOTES.length > 0) {
                     setDailyQuoteObj(APP_QUOTES[Math.floor(Math.random() * APP_QUOTES.length)]);
                 }
@@ -538,12 +556,11 @@
 
             // Settings Sync
             useEffect(() => {
-                document.documentElement.className = `theme-${theme} font-style-${fontFamily} ${!animationsEnabled ? 'no-transitions' : ''}`;
+                document.documentElement.className = `theme-${theme} ${language === 'arp' ? 'font-style-serif font-arabic' : 'font-style-'+fontFamily} ${!animationsEnabled ? 'no-transitions' : ''}`;
                 localStorage.setItem('suffa_theme', theme);
                 localStorage.setItem('suffa_fontsize', fontSize);
                 localStorage.setItem('suffa_fontfamily', fontFamily);
                 localStorage.setItem('suffa_anim', animationsEnabled);
-                localStorage.setItem('suffa_lang', language);
             }, [theme, animationsEnabled, fontSize, fontFamily, language]);
 
             useEffect(() => { localStorage.setItem('suffa_notes', JSON.stringify(savedNotes)); }, [savedNotes]);
@@ -557,7 +574,6 @@
                 }
             }, [selectedBookKey, selectedChapter]);
 
-            // Ses motorlarını çek
             useEffect(() => {
                 const loadVoices = () => setVoices(synth.getVoices());
                 loadVoices();
@@ -575,10 +591,10 @@
                 }
             };
 
-            // --- KUSURSUZ OTOMATİK KAYDIRMA MOTORU (requestAnimationFrame DOM Mod) ---
+            // --- KUSURSUZ OTOMATİK KAYDIRMA MOTORU (requestAnimationFrame) ---
             useEffect(() => {
                 let lastTime = performance.now();
-                const scrollSpeed = 0.04; // 1 saniyede yaklaşık 40px yağ gibi akış
+                const scrollSpeed = 0.04; 
 
                 const scroll = (currentTime) => {
                     if (isAutoScrolling && readingContainerRef.current) {
@@ -613,7 +629,7 @@
                 };
             }, [isAutoScrolling]);
 
-            // Kaydırma müdahalesi ile otomatik kaydırmayı durdurma
+            // Kaydırmayı Durdurma
             useEffect(() => {
                 const container = readingContainerRef.current;
                 const stopScroll = (e) => {
@@ -632,7 +648,7 @@
                 };
             }, [isAutoScrolling, activeScreen]);
 
-            // --- ÇİFT TIKLAMA İLE OTOMATİK KAYDIRMA ---
+            // --- ÇİFT TIKLAMA İLE KAYDIRMA BAŞLAT/DURDUR ---
             const handleReadingAreaClick = (e) => {
                 if(e.target.closest('button') || e.target.closest('.glass-panel')) return;
                 
@@ -646,7 +662,7 @@
                 lastTapTime.current = currentTime;
             };
 
-            // --- MULTI-LANGUAGE TTS MOTORU ---
+            // --- MULTI-LANGUAGE TTS MOTORU (Hız Hafızalı) ---
             const speakNextChunk = (forcedRate = null) => {
                 if (chunkIndexRef.current >= chunksRef.current.length) { setIsPlaying(false); return; }
                 const text = chunksRef.current[chunkIndexRef.current];
@@ -811,20 +827,10 @@
             const handleSiyerAssistant = (e) => {
                 if(e) { e.preventDefault(); e.stopPropagation(); }
                 triggerHaptic();
-                const selectionNormalized = normalizeText(popup.text);
                 setPopup(prev => ({ ...prev, state: 'assistant_loading' }));
                 
                 setTimeout(() => {
-                    let foundMatch = null;
-                    for (const [key, response] of Object.entries(ASSISTANT_DB)) {
-                        const keyNormalized = normalizeText(key);
-                        if (selectionNormalized.includes(keyNormalized) || keyNormalized.includes(selectionNormalized)) {
-                            foundMatch = response;
-                            break;
-                        }
-                    }
-                    if (!foundMatch) foundMatch = "Kardeşlerim, bu satırlarda Asr-ı Saadet'in o sarsılmaz imanı ve teslimiyeti var. Seçtiğiniz bu kavram üzerine tefekkür etmek, nebevi çizgide bir şuur inşası için muazzam bir adımdır.";
-                    setPopup(prev => ({ ...prev, state: 'assistant_result', assistantText: foundMatch }));
+                    setPopup(prev => ({ ...prev, state: 'assistant_result', assistantText: currentAssistantMsg }));
                 }, 800);
             };
 
@@ -853,7 +859,7 @@
                 if(e) { e.preventDefault(); e.stopPropagation(); }
                 triggerHaptic();
                 navigator.clipboard.writeText(text).then(() => {
-                    showToast("Panoya kopyalandı 📋");
+                    showToast(t.share + " 📋");
                     setPopup(null);
                     window.getSelection().removeAllRanges();
                 }).catch(() => {
@@ -861,8 +867,8 @@
                     textArea.value = text;
                     document.body.appendChild(textArea);
                     textArea.select();
-                    try { document.execCommand('copy'); showToast("Kopyalandı 📋"); } 
-                    catch (err) { showToast("Kopyalama başarısız ❌"); }
+                    try { document.execCommand('copy'); showToast(t.share + " 📋"); } 
+                    catch (err) { showToast("Başarısız ❌"); }
                     document.body.removeChild(textArea);
                     setPopup(null);
                     window.getSelection().removeAllRanges();
@@ -894,11 +900,11 @@
                 triggerHaptic();
                 if (editingNoteId) {
                     setSavedNotes(prev => prev.map(n => n.id === editingNoteId ? { ...n, text: noteText, color: activeNoteColor } : n));
-                    showToast(t.save + " 📝 (Güncellendi)");
+                    showToast(t.save + " 📝");
                 } else {
                     const newNote = {
                         id: Date.now(), quote: noteTargetText, text: noteText, color: activeNoteColor,
-                        book: activeBook?.title || "Kitap", chapter: selectedChapter?.title || "Bölüm",
+                        book: activeBook?.title || "Kitap", chapter: getTranslatedChapterTitle(selectedChapter) || "Bölüm",
                         date: new Date().toLocaleDateString('tr-TR')
                     };
                     setSavedNotes(prev => [newNote, ...prev]);
@@ -912,35 +918,34 @@
             const deleteNote = (id) => {
                 triggerHaptic();
                 setSavedNotes(prev => prev.filter(n => n.id !== id));
-                showToast("Not silindi 🗑️");
+                showToast("Silindi 🗑️");
             };
 
-            // DİNAMİK VE DERİN BAŞLIK ÇEVİRİSİ (DEEP LOCALIZATION)
+            // DİNAMİK BAŞLIK ÇEKME KURALI (İstenen format uygulandı)
             const getTranslatedChapterTitle = (ch) => {
                 if (!ch) return "";
                 const originalTitle = ch['title_' + language] || ch.title; 
                 if (!originalTitle) return "";
                 
-                // "1. Bölüm: Vahyin Gölgesinde" formatını yakalama
                 const match = originalTitle.match(/^(\d+)\.\s*Bölüm:\s*(.*)$/i);
                 if (match && language !== 'tr') {
                     const num = match[1];
                     const rest = match[2];
-                    // UI sözlüğünde "Vahyin Gölgesinde" varsa onu al, yoksa aynen bırak
                     const translatedRest = t[rest] || rest;
                     return `${t.chapterPrefix} ${num}: ${translatedRest}`;
                 }
                 return t[originalTitle] || originalTitle;
             };
 
+            // DİNAMİK LÜGAT EŞLEŞTİRMELİ METİN RENDER ALGORİTMASI
             const renderTextWithHighlights = (text, currentLang) => {
                 if (!text) return null;
                 const pClass = currentLang === 'arp' ? "text-arabic" : "";
                 
-                const keywords = Object.keys(ENCYCLOPEDIA);
+                const keywords = Object.keys(currentEncyclopedia);
                 const highlightTexts = userHighlights.map(h => h.text);
                 
-                if ((keywords.length === 0 && highlightTexts.length === 0) || currentLang !== 'tr') {
+                if ((keywords.length === 0 && highlightTexts.length === 0)) {
                     return text.split('\n\n').map((p, i) => <p key={i} className={pClass}>{p}</p>);
                 }
                 
@@ -986,7 +991,7 @@
 
                                 const encKeyword = keywords.find(k => normalizeText(k) === normPart);
                                 if (encKeyword) {
-                                    return <span key={i} onClick={(e) => { e.stopPropagation(); triggerHaptic(); setActiveCard({ title: part, desc: ENCYCLOPEDIA[encKeyword] })}} className="text-[#D4AF37] font-bold border-b border-[#D4AF37]/50 cursor-pointer transition-colors duration-300 hover:bg-[#D4AF37]/10 px-1 rounded-sm">{part}</span>;
+                                    return <span key={i} onClick={(e) => { e.stopPropagation(); triggerHaptic(); setActiveCard({ title: part, desc: currentEncyclopedia[encKeyword] })}} className="text-[#D4AF37] font-bold border-b border-[#D4AF37]/50 cursor-pointer transition-colors duration-300 hover:bg-[#D4AF37]/10 px-1 rounded-sm">{part}</span>;
                                 }
                                 
                                 return part;
@@ -1004,7 +1009,6 @@
                 return Math.max(1, Math.ceil(content.split(/\s+/).length / 200));
             }, [content]);
 
-            // Bölümler Arası Geçiş (Next/Prev)
             const chapterIndex = useMemo(() => {
                 if (!activeBook || !selectedChapter) return -1;
                 return activeBook.chapters.findIndex(c => c.id === selectedChapter.id);
@@ -1025,7 +1029,7 @@
                     case 'dictionary':
                         return (
                             <div className="flex flex-col space-y-2 max-h-64 overflow-y-auto custom-scrollbar pr-2">
-                                {Object.entries(ENCYCLOPEDIA).map(([word, desc]) => (
+                                {Object.entries(currentEncyclopedia).map(([word, desc]) => (
                                     <div key={word} onClick={() => { setIsMegaMenuOpen(false); setActiveCard({title: word, desc}); triggerHaptic(); }} className="p-3 border-b border-themeBorder/50 last:border-0 hover:bg-themeBg/50 transition-colors rounded-lg cursor-pointer group">
                                         <div className="text-gold font-bold text-sm mb-1 group-hover:scale-105 transition-transform origin-left">{word}</div>
                                         <div className="text-xs text-themeText/80 leading-relaxed line-clamp-2">{desc}</div>
@@ -1102,6 +1106,7 @@
                 <div className={`min-h-screen relative overflow-hidden font-sans theme-transition flex flex-col ${isFocusMode ? 'focus-mode-active' : ''}`}>
                     <div className="bg-glow-effect fixed top-[-20%] left-[-10%] w-[50%] h-[50%] blur-[120px] rounded-full pointer-events-none z-0 theme-transition transition-opacity duration-1000 animate-pulse-slow" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
                     <div className="bg-glow-effect fixed bottom-[-20%] right-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none z-0 theme-transition transition-opacity duration-1000 animate-pulse-slow" style={{ backgroundColor: 'var(--primary-glow)' }}></div>
+                    <div className="stars fixed inset-0 z-0"></div>
 
                     {toastMsg && (
                         <div className="fixed bottom-28 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-[100] glass-panel px-6 py-3 rounded-full shadow-2xl border border-gold/50 text-gold font-medium animate-slide-up whitespace-nowrap">
@@ -1360,16 +1365,18 @@
                         {popup && (
                             <div className={`fixed z-50 -translate-x-1/2 mb-3 shadow-2xl flex flex-col ${popup.isBelow ? 'mt-3' : ''}`} style={{ top: popup.top, left: popup.left }} onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); }} onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); }}>
                                 {popup.state === 'menu' && (
-                                    <div className="animate-fade-in flex items-center space-x-1 sm:space-x-2 px-2 py-1.5 sm:px-3 sm:py-2 bg-themePanel backdrop-blur-2xl border border-themeBorder shadow-[0_10px_30px_rgba(0,0,0,0.5)] rounded-full max-w-[90vw] overflow-x-auto no-scrollbar">
-                                        <button onClick={(e) => handleHighlight(e, 'yellow')} className="w-6 h-6 rounded-full bg-accentYellow shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(250,204,21,0.6)] border border-white/20" title="Sarı İle Çiz"></button>
-                                        <button onClick={(e) => handleHighlight(e, 'green')} className="w-6 h-6 rounded-full bg-accentGreen shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(34,197,94,0.6)] border border-white/20" title="Yeşil İle Çiz"></button>
-                                        <button onClick={(e) => handleHighlight(e, 'red')} className="w-6 h-6 rounded-full bg-accentRed shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(239,68,68,0.6)] border border-white/20" title="Kırmızı İle Çiz"></button>
-                                        
-                                        <div className="w-px h-5 bg-themeBorder/50 shrink-0 mx-1"></div>
-                                        
-                                        <button onClick={(e) => openNoteModal(e)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-themeText bg-themeBg/50 hover:bg-themeBorder rounded-full shrink-0 transition-colors">📝 {t.takeNote}</button>
-                                        <button onClick={(e) => handleSiyerAssistant(e)} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-gold bg-gold/10 hover:bg-gold/20 rounded-full shrink-0 transition-colors">✨ {t.assistant}</button>
-                                        <button onClick={(e) => copyToClipboard(e, popup.text)} className="flex items-center justify-center p-2 text-themeMuted hover:text-themeText bg-themeBg/50 rounded-full shrink-0 transition-colors" title={t.share}><IconShare size={14}/></button>
+                                    <div className="animate-fade-in flex flex-col px-3 py-2 bg-themePanel backdrop-blur-2xl border border-themeBorder shadow-[0_10px_30px_rgba(0,0,0,0.5)] rounded-2xl w-[220px]">
+                                        <div className="text-[9px] font-bold text-themeMuted text-center uppercase tracking-widest mb-2 border-b border-themeBorder/50 pb-1.5">{t.quickActions}</div>
+                                        <div className="flex justify-between items-center mb-3 px-2 mt-1">
+                                            <button onClick={(e) => handleHighlight(e, 'yellow')} className="w-7 h-7 rounded-full bg-accentYellow shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(250,204,21,0.6)] border border-white/20" title="Sarı İle Çiz"></button>
+                                            <button onClick={(e) => handleHighlight(e, 'green')} className="w-7 h-7 rounded-full bg-accentGreen shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(34,197,94,0.6)] border border-white/20" title="Yeşil İle Çiz"></button>
+                                            <button onClick={(e) => handleHighlight(e, 'red')} className="w-7 h-7 rounded-full bg-accentRed shrink-0 hover:scale-110 transition-transform shadow-[0_0_8px_rgba(239,68,68,0.6)] border border-white/20" title="Kırmızı İle Çiz"></button>
+                                        </div>
+                                        <div className="flex gap-1.5 border-t border-themeBorder/50 pt-2">
+                                            <button onClick={(e) => openNoteModal(e)} className="flex-1 py-1.5 text-xs flex items-center justify-center text-themeText bg-themeBg/50 hover:bg-themeBorder rounded-lg transition font-medium">📝 {t.takeNote}</button>
+                                            <button onClick={(e) => handleSiyerAssistant(e)} className="flex-1 py-1.5 text-xs flex items-center justify-center text-themeText bg-gold/10 hover:bg-gold/20 text-gold rounded-lg transition font-medium">✨ {t.assistant}</button>
+                                            <button onClick={(e) => copyToClipboard(e, popup.text)} className="px-2.5 py-1.5 text-xs flex items-center justify-center text-themeMuted bg-themeBg/50 hover:text-themeText rounded-lg transition" title={t.share}><IconShare size={14}/></button>
+                                        </div>
                                     </div>
                                 )}
                                 {popup.state === 'assistant_loading' && <div className="glass-panel rounded-xl px-5 py-4 text-sm text-themeMuted flex flex-col items-center space-y-3 min-w-[220px]"><div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin"></div><span className="animate-pulse">{t.thinking}</span></div>}
@@ -1395,7 +1402,7 @@
                             </div>
                         </div>
 
-                        <div className="reading-content w-full max-w-2xl lg:max-w-4xl mx-auto px-5 sm:px-8 pt-10 pb-32 relative transition-transform duration-700">
+                        <div className={`reading-content w-full max-w-2xl lg:max-w-4xl mx-auto px-5 sm:px-8 pt-10 pb-32 relative transition-transform duration-700 ${language !== 'arp' ? 'has-dropcap' : ''}`}>
                             <div className={`transition-all ${animationsEnabled ? 'duration-500 ease-out' : 'duration-0'} ${isTransitioning ? 'opacity-0 translate-y-6' : 'opacity-100 translate-y-0'}`}>
                                 <div className="text-center mb-10">
                                     <h1 className="text-2xl sm:text-3xl md:text-4xl font-serif font-medium text-themeText mb-4 leading-tight">{getTranslatedChapterTitle(selectedChapter)}</h1>
@@ -1432,7 +1439,7 @@
                             <div className="fixed bottom-0 left-0 w-full glass-panel border-t border-themeBorder shadow-[0_-10px_40px_rgba(0,0,0,0.5)] z-[85] animate-slide-up pb-safe" onClick={(e) => e.stopPropagation()}>
                                 <div className="max-w-5xl mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3">
                                     <div className="flex items-center space-x-3 sm:space-x-5 flex-1 min-w-0">
-                                        <button onClick={() => isPlaying ? pauseAudio() : playAudio()} className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-gold to-[#B8942E] text-themeBg flex items-center justify-center hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.5)]">
+                                        <button onClick={(e) => { e.stopPropagation(); isPlaying ? pauseAudio() : playAudio(); }} className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-gold to-[#B8942E] text-themeBg flex items-center justify-center hover:scale-105 transition-transform shadow-[0_0_20px_rgba(212,175,55,0.5)]">
                                             {isPlaying ? <IconPause /> : <IconPlay />}
                                         </button>
                                         <div className="flex flex-col min-w-0 flex-1">
@@ -1441,7 +1448,7 @@
                                         </div>
                                     </div>
                                     <div className="flex items-center space-x-2 sm:space-x-4 shrink-0">
-                                        <button onClick={togglePlaybackRate} className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-themeBorder text-themeMuted hover:text-gold hover:border-gold/50 transition-colors text-xs sm:text-sm font-bold shadow-sm bg-themeBg/50">
+                                        <button onClick={(e) => togglePlaybackRate(e)} className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-xl border border-themeBorder text-themeMuted hover:text-gold hover:border-gold/50 transition-colors text-xs sm:text-sm font-bold shadow-sm bg-themeBg/50">
                                             {playbackRate}x
                                         </button>
                                         <button onClick={(e) => {showToast("İndirme modülü hazırlanıyor... 📥"); triggerHaptic(); e.stopPropagation();}} className="p-2 sm:p-2.5 text-themeMuted hover:text-gold transition-colors bg-themeBg/50 rounded-xl border border-transparent hover:border-gold/30" title="Bölümü İndir">
